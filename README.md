@@ -2,6 +2,7 @@
 
 Astraが同じBlenderの状態を見ながら、操作・比較・修正を続けるための実用Skill。
 Blender 5.2.1で制作、画像比較、GN変更、保存後の再読込まで実行済みです。
+完成済みの固定Skillとはせず、実制作で役立った方法・知識・Assetを蓄積して育てます。
 
 **入口: [skills/blender/SKILL.md](skills/blender/SKILL.md)**
 
@@ -15,6 +16,22 @@ Blender 5.2.1で制作、画像比較、GN変更、保存後の再読込まで�
 - 部品の見通しを比較し、隠れた細部を確認しやすい視点を選択。
 - GNの実際のソケット/APIを調べ、段数・寸法などの意味のある入力を変更。
 - 関節、曲線、シェル、インスタンス、生成ソースを保持した成果物を保存。
+- 既存Asset・generator・methodを確認し、再利用・改良した成果を次の制作へ残す。
+
+## 実運用するAsset Library
+
+[標準Blender Library](skills/blender/assets/library)に、可動ランプ、可変棚、
+棚と放射状ボルトのGN generator、5種のMaterialを収録しています。
+4 catalog・9 Assetそれぞれにpreview、用途と制約、出典、版を持たせました。
+外部取得物のライセンス・依存ファイル・公開可否も含む
+[発見・取り込み・蓄積の方法](skills/blender/references/assets.md)をSkillから参照できます。
+
+![Libraryだけから別シーンへ再利用したランプ・棚・Material](artifacts/asset-reuse.png)
+
+この画像はLibraryからappendした別シーンです。ランプの独立コピー、関節変更、
+棚の寸法・段数変更、GN単体とMaterialの再利用、保存後の再読込を確認しました。
+Libraryは約615 KBで、元の制作シーンや外部ファイルに依存しません。
+Skillのglobal登録やBlender設定の永続保存は行っていません。
 
 ## 使う
 

@@ -43,7 +43,15 @@ Add machinery when it earns its existence by making the Skill more capable, more
 
 Do not turn this repository into a compliance exercise against its own documents. Do not optimize for file count, test count, node count, framework completeness, or architectural symmetry.
 
-The target is a finished Skill that works in real Blender work. Astra may choose whatever amount and form of checking it needs to know that the result actually works; the repository does not prescribe a validation ritual.
+The target is a continually improving Skill used in real Blender work. Complete
+individual deliveries, but do not mark the Skill permanently finished. Preserve
+useful production knowledge and reusable authored/acquired assets; check existing
+assets and methods before new authoring. Astra chooses the checking needed to know
+that a result works; the repository does not prescribe a validation ritual.
+
+The user primarily judges the final result. Interpret feedback as a signal about
+that result; Astra owns technical diagnosis, topology and the production method.
+Keep only improvements that make actual production better or faster.
 
 Keep writing compact. Prefer working mechanisms and well-chosen references over long explanatory prose.
 

@@ -30,6 +30,10 @@ print(render(SESSION_DIR.parent / 'candidate.png', bpy.context.scene.camera))
 
 The response includes request ID, Python output, elapsed time, active file and error traceback. Save with `bpy.ops.wm.save_as_mainfile(filepath=...)` to an explicitly chosen candidate. Open a known source in the dedicated session with `bpy.ops.wm.open_mainfile(filepath=...)`; the persistent timer survives file loading. File changes invalidate object references: reacquire `bpy.data` objects afterwards. Stop running animation/modal operators before scripted mutations.
 
+After `open_mainfile`, `bpy.context.window` can be `None` for the rest of that timer
+callback. Put window/scene-dependent edits in the next request after file loading
+settles; do not repeat the load or reuse pre-load object references.
+
 Read `status`, inspect the intended scene, then edit. Each request checks session identity and the filepath observed on submission. Use `--expect-file /known/candidate.blend` when a script must apply to that file. File identity is a guard against a changed target, not a diff of concurrent UI edits.
 
 ## Uncertain outcomes

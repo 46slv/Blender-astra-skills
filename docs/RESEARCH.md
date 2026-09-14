@@ -1,5 +1,70 @@
 # Decisions and evidence — 2026-09-14
 
+## Continuing production and native assets
+
+The Skill is deliberately not permanently complete. Subsequent production should
+reuse/adapt existing assets and methods, investigate failures or better approaches,
+and retain improvements only when they improve actual work. User feedback is a
+signal about the result; Astra remains responsible for technical diagnosis and
+live observation → decision → edit → observation. GOAL and Skill now say this
+explicitly; current taxonomy and architecture are revisable.
+
+Native Blender storage won over a separate manifest/database: the Asset Browser
+already handles catalogs, tags, descriptions and previews, while bpy can discover
+marked IDs without importing the scene. The small `scripts/assets.py` helper adds
+discovery, independent append and registration for a dedicated process. Registration
+is a preferences entry, not a transient registry: disable preference auto-save
+before adding it and never manually save that process's preferences. No global
+Skill registration or preferences save was performed.
+
+`skills/blender/assets/library/starter-v1.blend` contains **9 assets / 4 catalogs**:
+lamp collection, shelf object, shelf and radial-fastener GN groups, and five lamp
+materials. All have 256 px custom previews, native descriptions/license/source
+information, stable custom identity/version and generator Text pointers. The lamp's
+new placement Empty preserves its internal pivots. Both GN groups enable Modifier
+usage. Shelf swatches now also drive Principled Base Color for material renders.
+Original example assets/scripts remain intact. Native graphs need no Python to
+evaluate; re-executing source Texts uses the bundled Skill helpers.
+
+Actual production evidence is in `artifacts/asset-reuse.png` and
+the `asset_library` section of `artifacts/evidence.json`; reproduction is in
+`experiments/build_asset_library.py` and `experiments/reuse_assets.py`.
+
+- Astra visually inspected all previews, the reused assembly render and the native
+  Asset Browser showing nine assets in Furniture, Generators, Lighting and Materials.
+- Two appended lamps share no objects. Changing one head by 0.12 radians moved a
+  bulb surface point 0.02339 m without changing the other head. Cable and hierarchy survive.
+- Shelf preset has 11 instances; changing to four levels gives eight, at measured
+  1.4 × 0.5 × 1.2 m bounds and floor Z=0. Lamp placement rests on the top board.
+- Separately appended shelf/fastener generators give seven and ten instances;
+  original shelf and lamp fasteners remain eight and six. Appended brass is independent.
+- A separate factory-startup process reopened the **614,539-byte** library: all nine
+  previews, catalog references and source Texts survive; no cameras, lights, floor,
+  external images, linked libraries, sounds or clips. Reopened reuse-scene shelf
+  controls still yield ten instances at six levels; lamp placement/pivots/cable survive.
+
+Trials exposed two practical details: file loading temporarily clears the timer's
+window context (edits now start in the following request), and Blender 5.2 can retain
+an unused Library ID after append. Check actual linked ID dependencies, not just
+Library record count; the owned reuse example removes empty records before saving.
+Blender auto-save preferences is enabled by default, so omitting `save_userpref`
+alone is insufficient for temporary registration.
+
+Limits remain visible on each asset: fixed-radius fastener ring, static cable,
+untextured shelf placeholder materials and no joinery; extreme shelf height/level
+combinations can overlap boards. No third-party acquisition was needed here, and
+the configured legacy User Library path was absent. Acquired resources can use
+explicit private/project library roots; retain license evidence and permitted-use
+limits rather than treating a public download as permission to redistribute.
+External texture packing is documented, not claimed as exercised by these texture-free assets.
+
+Research sources: [native libraries](https://docs.blender.org/manual/en/5.2/files/asset_libraries/introduction.html),
+[Asset Browser](https://docs.blender.org/manual/en/5.2/editors/asset_browser.html),
+[library read/write API](https://docs.blender.org/api/5.2/bpy.types.BlendDataLibraries.html).
+Luna researched alternatives and API pitfalls; Astra owned extraction and live reuse.
+The stock Skill validator was invoked again but still cannot run without PyYAML;
+no dependency was installed for that check.
+
 The original branch contained research documents only. Implementation was built
 against actual local capability: Windows Blender **5.2.1 LTS**, bpy/Python 3.13,
 NumPy, Cycles CPU and Workbench; host Python 3.12 with Pillow/NumPy; direct Windows

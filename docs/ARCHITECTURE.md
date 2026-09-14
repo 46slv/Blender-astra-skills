@@ -20,4 +20,16 @@ NodeCue's live node probe is reused under MIT. No SceneIR, mandatory segmentatio
 stack, semantic database, global solver, new agent role, paid asset service or model
 download proved necessary for the completed trials.
 
+Reusable production work lives in ordinary native Blender asset libraries: marked
+collections/objects/materials/node groups, native metadata/previews and catalog
+UUIDs. A small bpy helper discovers and appends assets; there is no parallel asset
+database. Authored and acquired resources follow the same reuse approach, with
+provenance and rights controlling which library can contain/distribute them.
+
+The Skill remains in continuing development. Production starts by considering
+existing assets and methods; demonstrated solutions and better authoring return
+to the appropriate asset, focused reference or helper. User feedback describes
+the desired result; Astra owns diagnosis and method selection. Architecture and
+taxonomy can change when actual production benefits.
+
 See [RESEARCH.md](RESEARCH.md) for competing approaches, actual evidence and limits.

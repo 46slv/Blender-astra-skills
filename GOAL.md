@@ -30,11 +30,16 @@ Do not freeze assumptions about Astra, Computer Use, image understanding, Blende
 
 If Astra can solve part of the problem directly and elegantly, do not wrap that ability in unnecessary infrastructure.
 
-## Completion
+## Continuing development
 
-Finish the Skill, not just the architecture.
+Make the Skill useful in real production; do not declare it permanently complete.
 
-The work is complete when Astra can actually use what it built for representative real Blender tasks and the result behaves like a practical tool rather than a design proposal.
+Finish each concrete delivery, then let further production improve the Skill's
+capabilities, knowledge and reusable Asset Library. Before new authoring, consider
+existing assets, generators and methods. Preserve worthwhile authored and acquired
+resources with their dependencies, provenance and allowed uses. Return demonstrated
+solutions and better authoring methods to the relevant knowledge or asset, without
+making improvement itself a separate end goal.
 
 Use whatever checks, experiments, retries, comparisons, or live Blender work Astra judges necessary to become confident that it works. No fixed validation ritual, test count, benchmark suite, schema set, or package topology is prescribed here.
 
@@ -57,4 +62,4 @@ Everything else is a design problem for Astra to solve.
 3. Read `docs/PRIOR_ART.md` and any other focused document that appears useful.
 4. Research aggressively.
 5. Decide what architecture is actually warranted.
-6. Build it to completion.
+6. Deliver usable work and carry useful discoveries into the next production.

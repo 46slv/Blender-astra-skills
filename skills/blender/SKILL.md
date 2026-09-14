@@ -1,15 +1,28 @@
 ---
 name: blender
-description: Create, refine and inspect editable Blender models and scenes using direct visual feedback, bpy, Geometry Nodes and reference images. Use for real Blender modeling, reference matching, procedural assets, scene assembly and repairs.
+description: Create, refine and inspect editable Blender models and scenes using direct visual feedback, bpy, Geometry Nodes, references and reusable assets. Use for Blender modeling, reference matching, procedural authoring, scene assembly, asset-library work and repairs.
 ---
 
 # Blender
 
 Keep the agent that sees the scene responsible for the next edit. Use research workers for independent questions; keep live Blender operation in one context. Deliver usable geometry and an editable `.blend`, with the views needed to judge the result.
 
+This is a growing production skill, not a finished fixed recipe. Receive the goal,
+references, available assets and authority; choose the research, representation,
+operations and checks yourself. Treat user feedback as evidence about the desired
+result; diagnose technical causes and choose the remedy rather than mechanically
+following a suggested topology or modeling procedure.
+
 ## Start with the actual scene and runtime
 
 Find the intended Blender/file, inspect its version, mode, active scene and visible result. Discover available tools before assuming an MCP exists. Prefer an already working direct bpy channel. GUI is useful for visual selection, sculpting, topology work and inspection; Python is useful for exact geometry and repeated changes. Switch as the task demands.
+
+Before building from zero, look for useful project/library assets, generators and
+methods in the focused references/examples. Inspect promising candidates and decide
+whether reuse, adaptation or new authoring best serves this brief. Read
+[assets.md](references/assets.md) for the working native Asset Library, discovery,
+editable import and capture of authored or acquired resources. A poor existing
+asset is not a reason to compromise the result.
 
 If no suitable persistent channel exists, [runtime.md](references/runtime.md) gives a local session that needs only Blender and host Python. It starts a separate factory session, runs scripts on Blender's main thread and returns results without a network listener or add-on. It does not attach to an arbitrary open file. Other Blender windows may contain unsaved work.
 
@@ -44,3 +57,21 @@ Use `compare.py` on host Python for matched crops and overlays; Pillow and NumPy
 Save a new candidate at the intended output location; preserve original user assets. Keep useful modifiers, curves, instances, parameter names/units and source scripts. Export a derived copy only when requested and inspect that exported result. Check the properties relevant to use: contacts and scale for assembly, actual evaluated instances for GN, normals/topology for meshes, deformation for rigged assets. Confirm a saved file reopens when persistence matters.
 
 Report what is visually verified, what is structurally checked, and what remains inferred. Do not call a reference match complete if its decisive region is still hidden or too small to inspect.
+
+## Leave the next production better equipped
+
+Capture work worth reusing: props, furniture, materials, node groups, GN generators,
+leaf/branch source parts, modular components or complete procedural systems. Keep
+the smallest useful editable unit with its dependencies and usage knowledge; a
+finished scene is not always the best asset. Use the same library approach for
+acquired resources once their provenance and allowed uses are understood.
+
+When production exposes a limitation, investigate the cause, try a remedy and
+inspect the result. Generalize only what will improve another real task: a concise
+method in the relevant reference, a useful helper or a reusable asset. Better shape,
+topology, authoring or procedural reuse is worth adopting even if the old approach
+already worked. Record measured discoveries and remaining limits in the project's
+existing research/decision notes (here: `docs/RESEARCH.md`); replace stale advice
+rather than accumulating rules. The current repo design and taxonomy can change.
+Do not create a framework or documentation project to demonstrate improvement.
+Complete individual deliveries without declaring the Skill permanently complete.

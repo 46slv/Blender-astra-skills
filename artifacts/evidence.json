@@ -289,5 +289,106 @@
     "gn_levels_7_instances": 11,
     "bytes": 184555,
     "image_metadata": "PNG text/EXIF removed; decoded pixel hashes unchanged; color metadata preserved"
+  },
+  "asset_library": {
+    "reuse": {
+      "blender": "5.2.1 LTS",
+      "native_assets_discovered": 9,
+      "independent_lamp_copies": 2,
+      "lamp_pose_bulb_displacement_m": 0.023385937028495077,
+      "shelf_preset_instances": 11,
+      "shelf_edited_instances": 8,
+      "shelf_bounds_m": [
+        [
+          -0.699999988079071,
+          0.699999988079071
+        ],
+        [
+          -0.25,
+          0.25
+        ],
+        [
+          0.0,
+          1.2000000476837158
+        ]
+      ],
+      "standalone_shelf_instances": 7,
+      "standalone_fasteners_instances": 10,
+      "lamp_fasteners_unchanged": 6,
+      "metadata_samples": [
+        {
+          "name": "Articulated Lamp v1",
+          "id": "astra.lighting.articulated-lamp",
+          "version": 1,
+          "preview": [
+            256,
+            256
+          ]
+        },
+        {
+          "name": "Parametric Shelf v1",
+          "id": "astra.furniture.parametric-shelf",
+          "version": 1,
+          "preview": [
+            256,
+            256
+          ]
+        },
+        {
+          "name": "Shelf Generator v1.001",
+          "id": "astra.generators.shelf",
+          "version": 1,
+          "preview": [
+            256,
+            256
+          ]
+        },
+        {
+          "name": "Radial Fasteners v1.002",
+          "id": "astra.generators.radial-fasteners",
+          "version": 1,
+          "preview": [
+            256,
+            256
+          ]
+        },
+        {
+          "name": "Satin Brass v1.003",
+          "id": "astra.materials.satin-brass",
+          "version": 1,
+          "preview": [
+            256,
+            256
+          ]
+        }
+      ],
+      "external_libraries": 0,
+      "preferences_saved": false
+    },
+    "readback": {
+      "library": {
+        "asset_count": 9,
+        "previews": 9,
+        "catalogs": 4,
+        "external_resources": 0,
+        "studio_objects": 0,
+        "bytes": 614539
+      },
+      "saved_reuse": {
+        "six_level_shelf_instances": 10,
+        "placement_height_m": 1.152500033378601,
+        "lamp_parent_chain": true,
+        "editable_cable": true,
+        "external_libraries": 0
+      }
+    },
+    "fresh_replay_passed": true,
+    "asset_browser_visually_checked": true,
+    "render": "artifacts/asset-reuse.png",
+    "limits": [
+      "Blender 5.2.1 only",
+      "No third-party asset acquisition or texture packing exercised",
+      "No standalone asset license grant specified"
+    ]
   }
 }
