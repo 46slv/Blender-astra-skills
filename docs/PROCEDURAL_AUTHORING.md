@@ -1,338 +1,211 @@
-# Procedural Authoring — Geometry Nodes Leverage Contract
+# Procedural authoring — leverage, not doctrine
 
-## Purpose
+This document records promising ways to use Geometry Nodes and related procedural methods.
 
-Geometry Nodes is a persistent authoring layer for reuse, parameterization, assembly, placement, constraints, and environment layout.
+It is not a requirement that Astra use Geometry Nodes, nor a fixed contract for how procedural assets must be built.
 
-The objective is **procedural leverage**, not Geometry-Nodes-at-all-costs.
+The question is simpler:
 
-```text
-manual modeling where it is the best primitive
-+
-Geometry Nodes where rules / relationships / repetition / parameters add leverage
-=
-editable procedural authoring source
-```
+> Where can relationships, reuse, parameters, or automatic structure remove repeated manual work without reducing quality or editability?
 
-## 1. Procedural modes
+## 1. Useful procedural directions
 
-### P1 — Manual source + procedural wrapper
+### Manual source + procedural wrapper
 
-Keep a high-quality manual source mesh/curve and use GN for:
+Keep a strong manually modeled source asset and use procedural logic for things around it:
 
 - placement;
 - repetition;
 - variants;
-- attachment;
-- scale/spacing rules;
-- environment assembly.
+- attachments;
+- layout;
+- dependent transforms.
 
-Do not rebuild good source geometry only to claim that the asset is “fully procedural.”
+This is often better than rebuilding a good mesh as a fully procedural generator.
 
-### P2 — Fully procedural generator
+### Fully procedural generator
 
-Generate the shape itself from primitives/curves/mesh operations/fields/instances when the asset is naturally described by a small set of design parameters.
-
-Examples:
-
-- floor lamp;
-- shelving/rack/fence;
-- simple architecture modules;
-- vegetation/rock classes;
-- repeatable product families.
-
-### P3 — Modular part assembly
-
-Treat source parts as a library with semantic interfaces.
-
-```text
-Part Library
-  -> anchors / sockets / contact metadata
-  -> select / instance / transform
-  -> connect / orient / scale
-  -> assembled asset
-```
-
-The truth is `parts + interfaces + relations`, not merely `Join Geometry`.
-
-### P4 — Constraint / relation solver
-
-Derive values that should not require manual XYZ tuning.
+When a shape is naturally described by a compact set of design variables, generating the object can be powerful.
 
 Examples:
 
-- furniture Z from floor contact;
-- wall-mounted object position/orientation from wall surface + normal;
-- fastener count/spacing from panel width;
-- lamp shade transform from pole/end anchor;
-- dependent segment lengths from overall height;
-- clearance/attachment transforms from geometry.
+- lamps;
+- shelving/racks;
+- fences;
+- simple architecture systems;
+- repeated product families;
+- vegetation/rock classes.
 
-### P5 — Procedural environment / layout
+### Modular assembly
 
-Keep authorities separate:
+Treat reusable parts as parts, not as geometry that must be manually reassembled every time.
 
-```text
-Room / terrain / support surfaces
-Asset library
-Placement rules
-Art-directed overrides
-Derived scene
-```
-
-Do not bake furniture/props into the room shell when scene assembly can remain procedural.
-
-### P6 — Interactive Node Tool
-
-If a repeated editing gesture is useful across assets, consider a Node Tool instead of repeatedly rebuilding a modifier graph manually.
-
-## 2. Procedural leverage test
-
-Before choosing GN, ask:
+Potential concepts:
 
 ```text
-Q1 Does this operation/relation recur?
-Q2 Is there a meaningful parameter the user will change later?
-Q3 Can an existing source part be reused?
-Q4 Can a relation be derived from geometry/scene state?
-Q5 Is variation valuable?
-Q6 Is persistent procedural source useful downstream?
-Q7 Is GN complexity/performance cost lower than the manual alternative?
+part library
++ anchors / sockets / contacts
++ rules / parameters
+→ assembled object
 ```
 
-If Q1–Q6 has a strong YES, GN is a candidate. If Q7 is strongly NO, do not force it.
+The implementation might use Geometry Nodes, empties, named attributes, curves, collections, custom properties, Python, or something Astra discovers to be better.
 
-## 3. Parameter philosophy
+### Derived relationships
 
-Expose design intent, not implementation noise.
+Some values should perhaps not be user parameters at all.
 
-Parameter classes:
+Examples:
 
-```text
-author_input
-reference_fit
-derived
-constraint_solved
-internal
-```
+- furniture height derived from floor contact;
+- wall object orientation derived from wall normal;
+- connector transforms derived from part anchors;
+- repeated spacing derived from width/count;
+- lamp shade position derived from pole/end point;
+- dependent segment lengths derived from overall height.
 
-Expose values such as:
+A meaningful design input is usually more valuable than a raw XYZ offset whose correct value can be inferred.
 
-- `overall_height`
-- `base_radius`
-- `shade_diameter`
-- `shelf_count`
-- `panel_width`
-- `variant`
+### Procedural environments
 
-Prefer derived/solved values for:
+Environment authoring may benefit from separating:
 
-- raw Z contact offsets;
-- dependent endpoints;
-- connector transforms;
-- repeated spacing;
-- part attachment transforms;
-- counts implied by size/clearance.
+- room/terrain/support geometry;
+- asset library;
+- semantic zones or anchors;
+- placement rules;
+- constraints/clearance;
+- art-directed exceptions.
 
-Avoid double-authoring the same relationship with two user parameters.
+Random scatter is only one tiny subset of procedural layout.
 
-## 4. Part Interface Contract
+## 2. Geometry Nodes may be one implementation, not the architecture
 
-Reusable parts should expose semantic connection information where practical.
+Geometry Nodes is attractive because it is native, inspectable, non-destructive, instance-aware, and interactive.
 
-```yaml
-part_interface:
-  part_id: lamp.shade.A
-  source_type: object|collection|generated
-  local_axes:
-    up: +Z
-    forward: +Y
-  bounds: available|derived
-  anchors:
-    - id: mount.bottom
-      role: attach
-    - id: visual.center
-      role: reference
-  contact:
-    - id: support.bottom
-      type: support_contact
-  clearance:
-    footprint: optional
-  parameters:
-    exposed: [...]
-```
+But Astra should compare it against alternatives when appropriate:
 
-Implementation may use empties, points/curves, named attributes, helper geometry, or current Blender mechanisms. The semantic interface is the durable contract, not one object name.
+- ordinary Blender modifiers;
+- constraints;
+- collections/linked data;
+- Python-generated or maintained structures;
+- drivers;
+- custom operators/tools;
+- CAD-style parameterization;
+- simulations/solvers;
+- combinations of the above.
 
-## 5. Support / contact placement
+Do not force a relationship into GN merely because this repository is interested in GN.
 
-### Floor-supported asset
+## 3. Parameter design
 
-```text
-user/layout chooses X/Y + heading + asset
-        ↓
-support surface
-        ↓
-hit / nearest support position
-        ↓
-asset contact point / bounds bottom
-        ↓
-derive Z offset
-        ↓
-optional supported orientation policy
-        ↓
-placed instance
-```
+A strong procedural asset exposes the choices a person actually means to make.
 
-Rules:
-
-- floor/wall/ceiling semantics should be explicit or strongly evidenced;
-- no-hit / invalid-contact / excessive-slope cases must not silently become zero offsets;
-- not every floor asset should align fully to terrain normal;
-- fixed-view + numeric/structural evidence should confirm support relation.
-
-### Wall-mounted asset
-
-Use wall surface, outward normal, semantic mount anchor, and a declared clearance/offset.
-
-### Ceiling-mounted asset
-
-Use inverted support direction and semantic ceiling contact anchor.
-
-## 6. Parametric floor-lamp reference pattern
-
-```text
-base profile       -> procedural revolve/generator
-pole/arm           -> curve + profile
-shade              -> manual source OR procedural profile
-hinges/connectors  -> reusable parts
-assembly           -> Geometry Nodes
-floor contact      -> automatic
-parameters         -> semantic interface
-```
-
-Possible author inputs:
+Good examples:
 
 - overall height;
 - base radius;
-- pole radius;
-- arm length / curve strength;
-- shade diameter / height;
-- shade variant;
-- joint variant;
-- optional design lean/angle.
+- shade diameter;
+- shelf count;
+- spacing intent;
+- variant selection.
 
-Derived/internal:
+Potentially weak examples:
 
-- base-bottom support contact;
-- pole endpoints;
-- shade mount transform;
-- connector transforms;
-- dependent segment lengths;
-- optional cable/path length.
+- arbitrary Z offset that should follow floor height;
+- connector translation that should follow an anchor;
+- repeated spacing duplicated in several places;
+- implementation-specific node values exposed only because they exist.
 
-A good generator survives parameter changes, part swaps, source edits, and floor changes without manual repair of hidden offsets.
+Astra should decide what should be authored, what should be derived, and what should remain internal.
 
-## 7. Environment layout layers
+## 4. Contact and attachment
 
-Recommended order:
+One especially promising direction is to treat physical relationships semantically.
 
-1. coarse semantic zones;
-2. candidate points / art-directed anchors;
-3. asset selection;
-4. support solve;
-5. orientation;
-6. clearance/exclusion filtering;
-7. controlled variation;
-8. final manual/art-directed override.
+Possible relationships:
 
-Do not default to random scattering when the scene has semantic structure.
+- supported_by;
+- attached_to;
+- aligned_to;
+- inside;
+- clears;
+- follows;
+- distributed_along.
 
-Geometry Nodes is not a universal rigid-body packing solver. Use another solver or interactive adjustment when physical/layout complexity exceeds a practical GN contract.
+For example, furniture placement could use floor geometry to derive vertical contact instead of requiring a raw Z parameter.
 
-## 8. Instances and realization
+A lamp shade could attach to a semantic mount point rather than depending on hand-tuned coordinates.
 
-Default to preserving instance semantics for repeated geometry.
+The exact representation is open.
 
-- Keep source assets separate and reusable.
-- Keep stable IDs/seeds for variation.
-- Perform operations on instances before realization when practical.
-- Treat `Realize Instances` as a justified downstream boundary, not a generic fix.
-- Test that source-part edits propagate to the derived assembly.
+## 5. Instances and source preservation
 
-Authoring and derived output are different:
+Instances are valuable when they preserve reusable source authority and cheap variation.
+
+Avoid realizing or joining instances simply because that makes a later step easier, unless the later consumer really needs realized geometry.
+
+A useful distinction is:
 
 ```text
-AUTHORING MASTER
-  source parts
-  + node groups
-  + semantic parameters
-  + support/placement inputs
-  + overrides
-        ↓
-DERIVED OUTPUT
-  realized mesh if required
-  optimized/joined/triangulated runtime asset
-  cache/bake/export package
+authoring source
+→ derived/export result
 ```
 
-Do not push runtime optimization backward into the authoring source.
+The source can stay editable/procedural even when an exported artifact must be flattened, triangulated, joined, or otherwise transformed.
 
-## 9. GN-specific verification
+## 6. Floor lamp as a research object
 
-A procedural method should not become execution-ready until applicable checks pass:
+A floor lamp remains a useful example because it combines several authoring ideas:
 
-- parameter perturbation across representative min/default/max and combinations;
-- part swap;
-- source-part propagation;
-- support/contact transfer when floor/wall changes;
-- stable variation / ID behavior;
-- manual override persistence;
-- realization/export boundary;
-- representative performance envelope;
-- invalid/no-hit/empty-source behavior.
+```text
+base       rotational / profile-defined
+pole/arm   curve or repeated structural element
+shade      manual or procedural source
+joints     reusable parts
+assembly   relationships between parts
+floor      support/contact relation
+```
 
-Default-value beauty is not sufficient evidence.
+A good implementation might allow changes to height, proportions, shade variant, joint type, or floor level without hidden manual repair.
 
-## 10. Performance rules
+How to achieve that is intentionally open.
 
-- keep instance operations before realization;
-- scope expensive proximity/raycast/boolean queries;
-- avoid unnecessary recomputation of equivalent fields;
-- do not run expensive solvers across every point without need;
-- separate viewport/final quality lanes when helpful;
-- measure evaluation cost rather than judging by node count.
+## 7. What to learn from production work
 
-## 11. GN method mining
+When studying procedural artists or tutorials, look beyond node names.
 
-When learning from tutorials/production files, extract:
+Useful questions include:
 
-- procedural authoring mode;
-- source-part contract;
-- public parameter contract;
-- derived-parameter graph;
-- constraint solvers;
-- anchor/contact/interface semantics;
-- instance/realization boundary;
-- field/domain/attribute assumptions;
-- manual override policy;
-- invalid-input behavior;
-- performance hotspots;
-- consumer/export policy;
-- reason for subgroup/interface boundaries.
+- What repeated problem motivated the graph?
+- Which decisions remain artist-controlled?
+- Which values became derived?
+- What source parts stayed manual?
+- Where are anchors/interfaces encoded?
+- How are invalid or missing inputs handled?
+- What must remain editable later?
+- Where does performance become limiting?
+- What is realized only for delivery?
+- What would the artist automate differently next time?
 
-Learn the data flow and design decision, not the screenshot layout of the node tree.
+Old tutorials can still contain strong methods even when node names changed.
 
-Old tutorials remain useful if their semantic method is remapped to the target Blender version instead of copying stale node/socket spelling.
+## 8. Research directions
 
-## 12. Anti-patterns
+Astra should investigate more than existing GN tutorials.
 
-- full GN reconstruction only because GN is preferred;
-- exposing dozens of raw transform controls that can be derived;
-- giant one-off node trees that are harder to edit than the mesh;
-- early realize/join destroying source reuse;
-- unstable random variation after every graph edit;
-- graph interfaces filled with implementation details;
-- unbounded raycast/proximity over all points;
-- silent success for no-hit / empty collection / invalid range;
-- destructive apply in the authoring master solely for export convenience.
+Potentially relevant fields:
+
+- constraint solving;
+- procedural CAD;
+- assembly graphs;
+- parametric product design;
+- scene grammars;
+- robotics contact/pose reasoning;
+- layout optimization;
+- spatial databases;
+- game-editor prefab systems;
+- Houdini procedural workflows;
+- node-based modeling systems outside Blender.
+
+The goal is not to imitate these systems. It is to discover ideas that make Blender authoring more powerful for Astra.
