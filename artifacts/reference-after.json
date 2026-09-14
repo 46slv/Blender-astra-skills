@@ -1,0 +1,16 @@
+{
+  "region": [
+    0,
+    0,
+    1,
+    1
+  ],
+  "crop_pixels": [
+    0,
+    0,
+    768,
+    768
+  ],
+  "meaning": "Paired visual evidence; RGB differences also contain lighting/material/camera error.",
+  "silhouette_iou": 0.9999353824283284
+}

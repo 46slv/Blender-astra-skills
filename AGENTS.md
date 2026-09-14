@@ -4,6 +4,10 @@ This repository exists to let Astra discover and build an unusually capable Blen
 
 Read `GOAL.md` first. Treat the rest of the repository as prior research, hypotheses, and reusable material—not as a blueprint that must be implemented literally.
 
+The working Skill is [`skills/blender/SKILL.md`](skills/blender/SKILL.md).
+Read it for Blender production work. Current decisions and measured limits are
+in [`docs/RESEARCH.md`](docs/RESEARCH.md); original research seeds remain background.
+
 ## Operating posture
 
 Astra is the principal researcher, designer, implementer, and Blender operator for this project.

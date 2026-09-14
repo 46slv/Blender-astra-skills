@@ -1,74 +1,51 @@
-# Blender Astra Skills
+# Blender Astra Skill
 
-Research-and-build repository for a Blender Skill designed around one premise:
+Astraが同じBlenderの状態を見ながら、操作・比較・修正を続けるための実用Skill。
+Blender 5.2.1で制作、画像比較、GN変更、保存後の再読込まで実行済みです。
 
-> Give Astra enough context, access, and research depth to discover a better way to work in Blender than we can fully prescribe in advance.
+**入口: [skills/blender/SKILL.md](skills/blender/SKILL.md)**
 
-## Status
+![実際に制作した編集可能なランプ](artifacts/lamp.png)
 
-**RESEARCH / ARCHITECTURE SEED — IMPLEMENTATION PENDING**
+## できること
 
-The repository currently contains prior research and design ideas. They are not a fixed specification.
+- 追加アドオン・MCP・外部サービスなしで、専用Blenderへ短いPython編集を継続実行。
+- 画像中の一点を、評価後の部品・3D位置・法線へ対応付ける。GNインスタンスにも対応。
+- カメラのずれと形状のずれを分け、対応点と少数の編集パラメータから補正。
+- 部品の見通しを比較し、隠れた細部を確認しやすい視点を選択。
+- GNの実際のソケット/APIを調べ、段数・寸法などの意味のある入力を変更。
+- 関節、曲線、シェル、インスタンス、生成ソースを保持した成果物を保存。
 
-## Goal
+## 使う
 
-Build a practical, unusually capable Blender Skill for Astra.
+このリポジトリ内ではAGENTS.mdからSkillへ案内されます。ほかの作業で使う場合は
+`skills/blender` フォルダを利用環境のSkillディレクトリへ配置するか、入口のパスを指定して読ませてください。
+既存Skillを上書きする自動インストーラや、ホスト固有の設定変更は含めていません。
 
-Astra should understand the live capabilities available to it, research the problem space broadly, reuse strong prior art where useful, invent new mechanisms where useful, and finish something it can actually use in Blender.
+起動・実行コマンドは [runtime.md](skills/blender/references/runtime.md)。
+Blender内の機能はbpy/NumPyを使い、画像比較だけはホストPythonのPillow/NumPyを使います。
 
-See [`GOAL.md`](GOAL.md).
+## 試せる成果物
 
-## Working hypothesis
+- [編集可能な .blend](artifacts/blender-skill-examples.blend): 可動ランプと可変棚、生成ソース、接写カメラ。
+- [参照との差・修正前](artifacts/reference-before.png) / [修正後](artifacts/reference-after.png)
+- [見通しから選んだ電球の接写](artifacts/detail.png)
+- [GN変更後の棚](artifacts/shelf.png)
+- [実行結果](artifacts/evidence.json) / [判断と限界](docs/RESEARCH.md)
 
-Interactive Blender work probably benefits from keeping visual/spatial continuity inside one Astra context:
+再現する場合はリポジトリrootから新規セッションを起動し、`experiments/run_examples.py`
+を実行します。例えばセッションを `.work/reproduction/live` にすると、出力は
+`.work/reproduction/blender-skill-examples.blend` です。同梱の成果物は上書きしません。
+その後、保存ファイルを再読込して `experiments/readback.py` を実行できます。
 
-```text
-Astra sees
-→ Astra reasons
-→ Astra acts
-→ Astra looks again
-→ Astra adapts
-```
+公開用の .blend は約185 KBです。自作の2シーンと生成ソースを含み、個人的な参照画像・
+外部アセット・ローカルの閲覧履歴を含まない形へ整理し、再読込とGN編集を再確認しました。
 
-Research is different. Research can fan out aggressively to Luna/subagents because it does not require ownership of the live Blender state.
+## 限界
 
-Astra should generate multiple plausible approaches for meaningful unknowns, delegate independent investigations, and synthesize the results itself.
+これは画像一枚から何でも復元する仕組みではありません。対応点や意味のある編集変数は
+Astraが選びます。検証は既知の合成参照による補正、製品形状、GN棚が中心で、
+実写の自動対応、透明体、未知の裏側、制作水準の人体・リギング、他のBlenderバージョンは未検証です。
 
-## The docs are ideas, not obligations
-
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — current design space and hypotheses.
-- [`docs/VISUAL_ANALYSIS.md`](docs/VISUAL_ANALYSIS.md) — ways to augment fine visual perception and reference/model comparison.
-- [`docs/PROCEDURAL_AUTHORING.md`](docs/PROCEDURAL_AUTHORING.md) — Geometry Nodes / procedural-authoring opportunities.
-- [`docs/PRIOR_ART.md`](docs/PRIOR_ART.md) — existing Blender Agent work worth inspecting and extending.
-
-Astra may simplify, replace, or discard these ideas after research or implementation.
-
-## Important directions discovered so far
-
-- Keep live Blender manipulation with Astra by default rather than fragmenting visual context across host-operating agents.
-- Use Luna/subagents heavily for research, including competing approaches and adjacent fields.
-- Improve perception before editing when a detail is ambiguous: zoom, compare reference/model at the same region, expose structure, or use image/Blender-derived evidence when useful.
-- Treat semantic regions, overlap/occlusion, landmarks, masks, Depth/Normal and similar signals as possible aids—not a mandatory visual pipeline.
-- Use Geometry Nodes where procedural relationships create real leverage: reusable parts, parametric assets, modular assembly, contact/alignment, repeated layouts and environments.
-- Do not force Geometry Nodes when ordinary modeling or another mechanism is better.
-- Reuse strong existing Skills and code instead of rebuilding solved components.
-- Avoid infrastructure that exists only to make the repository look rigorous.
-
-## Prior art seed
-
-Current high-value sources include:
-
-- `ifBars/blender-agent-studio`
-- `RobLe3/cc-blender-skill`
-- `CheshireJCat/create-3d-model-skill`
-- `nodecue/blender-node-skills`
-- `Aztech-Lab/EZ_Blender`
-- `achimala/dream-loop`
-
-This list is deliberately incomplete. Astra should search beyond it and beyond Blender-specific agent projects.
-
-## For Astra
-
-Start with `AGENTS.md` and `GOAL.md`.
-
-Then inspect the current repo, the live runtime, and whatever research is useful. Do not implement the current documents mechanically. Make the best Skill you can discover, and keep the repository only as complicated as the resulting capability actually requires.
+NodeCueのMITライセンス付きノードプローブを再利用しています。
+[出典・固定commit・ライセンス](skills/blender/scripts/vendor/PROVENANCE.md)を同梱しています。

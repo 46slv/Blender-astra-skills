@@ -1,0 +1,293 @@
+{
+  "blender": "5.2.1 LTS",
+  "date": "2026-09-14",
+  "reference_trial": {
+    "kind": "synthetic known-correspondence recovery",
+    "camera": {
+      "parameters": [
+        4.116905959195005e-08,
+        -7.260568570220671e-07,
+        1.2499969491217207
+      ],
+      "rms": 8.204703519715083e-05,
+      "converged": true,
+      "rank": 3,
+      "parameter_count": 3,
+      "history_rms": [
+        59.31142613010197,
+        6.098985029690775,
+        8.204703519715083e-05
+      ]
+    },
+    "pose": {
+      "parameters": [
+        -0.400003920169998,
+        1.0500083542190781,
+        2.091589953029636
+      ],
+      "rms": 0.00045004536671987196,
+      "converged": true,
+      "rank": 3,
+      "parameter_count": 3,
+      "history_rms": [
+        27.60040576276461,
+        10.386967177566131,
+        0.29661916658968074,
+        0.00045004536671987196
+      ]
+    },
+    "truth_camera": [
+      0.0,
+      0.0,
+      1.25
+    ],
+    "truth_pose": [
+      -0.4000000059604645,
+      1.0499999523162842,
+      2.09159255027771
+    ],
+    "shade_pixel_hit": {
+      "object": "Spun shade - editable profile rings",
+      "instance": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "position": [
+        0.17877483367919922,
+        -0.0850670337677002,
+        0.7445846796035767
+      ],
+      "normal": [
+        0.24086080491542816,
+        -0.6838564276695251,
+        0.6887136101722717
+      ],
+      "face_evaluated": 350,
+      "distance": 2.264757814258337
+    },
+    "fastener_instances": 6,
+    "fastener_ray_hit": {
+      "object": "Base fasteners - Geometry Nodes",
+      "instance": [
+        0,
+        0,
+        2147483647,
+        2147483647,
+        2147483647,
+        2147483647,
+        2147483647,
+        2147483647
+      ],
+      "position": [
+        0.10000000149011612,
+        0.0,
+        0.06549999862909317
+      ],
+      "normal": [
+        -2.3144773209082814e-08,
+        0.0,
+        1.0
+      ],
+      "face_evaluated": 0,
+      "distance": 0.13449999690055847
+    },
+    "limits": "Correspondences supplied from known model. No inference of unseen shape or automatic reference segmentation."
+  },
+  "active_view_and_gn": {
+    "active_view": {
+      "Detail front": 0,
+      "Detail side": 3,
+      "Detail below": 3,
+      "Detail above": 0
+    },
+    "chosen_view": "Detail side",
+    "shelf_instances": 11,
+    "bounds_min": [
+      -0.7749999761581421,
+      -0.1899999976158142,
+      0.0
+    ],
+    "bounds_max": [
+      0.7749999761581421,
+      0.1899999976158142,
+      1.7999999523162842
+    ],
+    "shelf_surface_hit": {
+      "object": "Parametric Shelf",
+      "instance": [
+        0,
+        10,
+        2147483647,
+        2147483647,
+        2147483647,
+        2147483647,
+        2147483647,
+        2147483647
+      ],
+      "position": [
+        0.0,
+        0.0,
+        1.7524999380111694
+      ],
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "face_evaluated": 2,
+      "distance": 1.2475000619888306
+    }
+  },
+  "reopened": {
+    "reopened": "artifacts/blender-skill-examples.blend",
+    "source_texts": 2,
+    "perspective_shift_aspect_ray_roundtrip": [
+      5.960464477539063e-08,
+      7.152557374157098e-08,
+      2.384185793236071e-08
+    ],
+    "reopened_shelf_instances_levels_3": 7,
+    "reopened_shelf_instances_levels_7": 11
+  },
+  "topology": {
+    "Weighted base": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Base lower trim": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Rubber foot": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Swivel collar": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Lower link -0.031": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Lower link 0.031": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Lower hinge": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Lower brass cap": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Lower bolt": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Lower brass cap.001": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Lower bolt.001": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Upper link -0.031": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Upper link 0.031": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Upper hinge": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Upper brass cap": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Upper bolt": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Upper brass cap.001": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Upper bolt.001": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Upper hinge.001": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Upper brass cap.002": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Upper bolt.002": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Upper brass cap.003": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Upper bolt.003": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Shade mount": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Spun shade - editable profile rings": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Rolled brass rim": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Socket": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    },
+    "Bulb": {
+      "nonmanifold_edges": 0,
+      "degenerate_faces": 0
+    }
+  },
+  "before_iou": 0.30188042430086787,
+  "after_iou": 0.9999353824283284,
+  "render_restoration": "Passed camera identity, object count, colors, engine, dimensions and exception path",
+  "wrong_file_guard": "Rejected; marker absent on readback",
+  "timeout": "Original ID completed, no resubmission",
+  "publication": {
+    "scenes": [
+      "Articulated Lamp",
+      "Shelf variants"
+    ],
+    "external_asset_paths": [],
+    "packed_reference_images": 0,
+    "source_texts": 2,
+    "source_text_matches_repository": true,
+    "workspace": "Fresh default UI; file-browser directories reset to project-relative",
+    "camera_links_valid": true,
+    "gn_levels_3_instances": 7,
+    "gn_levels_7_instances": 11,
+    "bytes": 184555,
+    "image_metadata": "PNG text/EXIF removed; decoded pixel hashes unchanged; color metadata preserved"
+  }
+}
