@@ -1,55 +1,62 @@
 # AGENTS.md
 
-This repository is for designing and implementing the `blender-astra-modeling` Agent Skill.
+This repository exists to let Astra discover and build an unusually capable Blender Skill.
 
-## Read order
+Read `GOAL.md` first. Treat the rest of the repository as prior research, hypotheses, and reusable material—not as a blueprint that must be implemented literally.
 
-Before substantial implementation:
+## Operating posture
 
-1. `GOAL.md`
-2. `docs/ARCHITECTURE.md`
-3. only the relevant focused documents under `docs/`
+Astra is the principal researcher, designer, implementer, and Blender operator for this project.
 
-Do not turn this file into the full manual. Durable architecture belongs in `docs/`; repeatable procedures belong in the Skill/scripts; current implementation outcome belongs in `GOAL.md`.
+Do not assume the repository authors understand the best architecture better than Astra does. If a documented design is weaker than something Astra discovers, replace it. If a proposed layer is unnecessary, omit it. If a radically different approach is better, use it.
 
-## Core operating rules
+Before committing to an implementation strategy, understand the capabilities actually available in the current runtime: tools, Computer Use, Blender access, Python/API surfaces, image understanding, local execution, Skills, and any useful adapters. Learn this from the live environment rather than from a static capability table when practical.
 
-- **Astra is the default solo/direct interactive Blender driver.** Keep observation, planning, host operation, local review, and repair in one Astra context when working in live Blender.
-- Subagents are **research-only by default**: Blender Manual/API lookup, tutorial mining, version checks, export/consumer specs, and prior-art research. Do not delegate interactive Blender GUI mutation, main `.blend` mutation, Computer Use, Blender write operations, or final visual acceptance to a child merely because the task is difficult or parallelizable.
-- Prefer the shortest correct execution lane per operation: GUI/Computer Use for visual/spatial edits; bounded `bpy`/adapter operations for deterministic scene changes; Geometry Nodes/modifiers for persistent procedural logic.
-- Treat broad screenshots as navigation evidence only. Fine-detail/final visual PASS requires target-framed and region-level evidence.
-- Compare **reference and model together** at matched semantic region, view/orientation, framing, and useful scale. If the feature is not actually visible, result is `UNKNOWN`, not PASS.
-- When raw visual judgement is ambiguous, build structured evidence: silhouette, edge map, semantic region mask, boundary class, occlusion/overlap relation, landmarks, and model-side Depth/Normal/object-mask/wireframe evidence as applicable.
-- Edge detection is evidence, not semantic truth. Distinguish silhouette, occlusion, construction, material, shading, texture, and unknown boundaries before converting a line into geometry intent.
-- Keep repair local: declare changed region/write set and protect accepted neighboring regions.
-- Preserve editable authoring source. Do not destroy source `.blend`, apply/realize/remesh broadly, or overwrite accepted source solely to satisfy an export format.
-- Use Geometry Nodes for **procedural leverage**, not for maximizing node usage. Manual high-quality source parts may remain authoritative and be wrapped/assembled procedurally.
-- Prefer semantic/design parameters over raw transforms. Derive contact, alignment, spacing, and dependent transforms when the relation can be solved and verified.
-- Inspect current upstream prior art before reimplementing equivalent analyzers or workflows. Check licenses before copying code.
+## Research
 
-## Prior art reuse
+Research aggressively.
 
-At minimum inspect `docs/PRIOR_ART.md` before implementing:
+For meaningful unknowns, first widen the possibility space rather than immediately choosing the first plausible solution. Consider conventional and non-obvious approaches, relevant prior art, adjacent fields, and techniques outside the current repository.
 
-- reference comparison / overlays / landmarks;
-- segmentation / contour / mask / multiview fitting;
-- Geometry Nodes graph knowledge;
-- Blender safety / bounded adapters;
-- benchmark/eval harnesses.
+Use Luna/subagents heavily for research when available. Good research delegation includes:
 
-Borrow concepts and compatible code where appropriate; do not silently vendor external code without license/provenance review.
+- current Blender/API/Geometry Nodes behavior;
+- existing Agent Skills and codebases;
+- production Blender workflows and practitioner methods;
+- computer vision / active perception / segmentation / correspondence;
+- procedural modeling, CAD, scene assembly, constraints, robotics or HCI ideas that may transfer;
+- alternative architectures and failure modes.
 
-## Verification
+Astra should formulate the research questions, fan them out, receive compact findings with sources, and synthesize the conclusions itself. Multiple independent research paths are encouraged when the design space is genuinely open.
 
-A task is not complete because a file exists or Blender returned success.
+Research workers do not own the live Blender session or the final design decision. Interactive Blender work normally stays with Astra so visual/spatial context is not fragmented.
 
-Use both:
+## Build the useful thing, not the scaffolding
 
-- structural evidence: scene/object/node/modifier/topology/dependency/export reports;
-- visual evidence: fixed/matched views, paired close-ups, relevant diagnostic passes.
+Do not create architecture, abstractions, schemas, validators, benchmarks, agent roles, wrappers, or documentation merely because they look rigorous.
 
-For changed detail, regenerate the **same comparison packet** after repair, then perform a broader regression view.
+Add machinery when it earns its existence by making the Skill more capable, more reliable, easier to use, easier to evolve, or materially easier for Astra to reason about.
 
-## Skill activation boundary
+Do not turn this repository into a compliance exercise against its own documents. Do not optimize for file count, test count, node count, framework completeness, or architectural symmetry.
 
-The architecture may be implemented autonomously within repository scope, but do not declare the Skill generally qualified until representative host fixtures in `docs/EVALS.md` pass. Documentation completeness is not host qualification.
+The target is a finished Skill that works in real Blender work. Astra may choose whatever amount and form of checking it needs to know that the result actually works; the repository does not prescribe a validation ritual.
+
+Keep writing compact. Prefer working mechanisms and well-chosen references over long explanatory prose.
+
+## Current high-value ideas, not requirements
+
+The repository contains promising directions including:
+
+- Astra keeping live Blender observation and manipulation in one context;
+- paired reference/model inspection and visual-structure assistance for difficult detail;
+- semantic decomposition, overlap/occlusion reasoning, masks, landmarks, Depth/Normal and other Blender-side truth when useful;
+- Geometry Nodes for procedural leverage, reusable parts, parametric assets, assembly, contact/alignment and environment layout;
+- reuse of strong existing Blender Agent Skills instead of rebuilding solved components.
+
+These are starting points. Astra owns the decision about what survives implementation.
+
+## Boundaries
+
+Preserve user assets and avoid destructive source overwrite by default. Respect credentials, paid/external services, repository authority, and third-party licenses. Do not silently copy external code without checking provenance and terms.
+
+Outside those boundaries, prefer informed autonomy over asking the user to make implementation decisions Astra can make better itself.
