@@ -1,210 +1,120 @@
-# Prior Art — Reuse Before Rebuild
+# Prior art — seed map for research
 
-## Purpose
+This file is a starting point, not a shortlist Astra is expected to choose from.
 
-This repository should not reimplement a full Blender-agent stack before inspecting current public Skill systems that already solve part of the problem.
+The project should research broadly enough that its final architecture is not merely a remix of the first Blender Agent repositories we happened to find.
 
-Before copying code:
+## Research posture
 
-1. read the current upstream implementation, not only this summary;
-2. inspect the exact license and provenance;
-3. compare behavior against this repo's architecture;
-4. reuse/adapt only the compatible component;
-5. preserve attribution/license obligations where required;
-6. keep local behavior/evals as the authority for promotion.
+For each important design problem, Astra should generate several plausible solution families and use Luna/subagents to investigate them independently when useful.
 
-## 1. `ifBars/blender-agent-studio`
+Ask research workers for compact answers with current sources/code, what the approach is actually good at, its limitations, and what mechanism may transfer.
 
-Repository: https://github.com/ifBars/blender-agent-studio
+Astra owns synthesis. Research findings are inputs, not architecture authority.
 
-Status: **highest-value overall workflow candidate**.
+Search outside Blender when the problem is more general than Blender.
 
-Observed useful ideas:
+Relevant adjacent fields may include:
 
-- specialist Blender Skills for modeling, validation, iterative refinement, Geometry Nodes/procedural work, rendering, character work, animation, simulation, and benchmarking;
-- explicit Astra-oriented execution guidance;
-- staged modeling contract rather than one open-ended Blender prompt;
-- reference cameras with fixed crop/framing during geometry comparison;
-- projected model silhouette + reference overlay;
-- authored landmarks for precise local diagnosis;
-- multiview evidence instead of optimizing one projection;
-- individual high-detail views when a contact sheet cannot resolve a defect;
-- durable/reproducible source and fresh-export validation;
-- bounded Blender tooling rather than assuming arbitrary Python access is safe;
-- benchmark methodology instead of assuming that more Skill text improves results.
+- computer vision and active perception;
+- robotics / visual servoing;
+- CAD / geometric constraints;
+- procedural modeling and scene grammars;
+- Houdini-style workflows;
+- game-editor prefabs / scene assembly;
+- HCI and direct manipulation;
+- differentiable rendering / inverse graphics;
+- 3D vision and correspondence;
+- production asset pipelines;
+- autonomous software agents and Computer Use.
 
-### Reuse direction
+## Current Blender-agent seeds
 
-Prefer to borrow/adapt:
+### `ifBars/blender-agent-studio`
 
-- staged modeling workflow;
-- reference-camera and overlay concepts;
-- landmark comparison ideas;
-- fixed-view evidence discipline;
-- bounded inspection/adapter ideas;
-- benchmark/evidence design.
+https://github.com/ifBars/blender-agent-studio
 
-Do **not** automatically inherit any architecture that forces Blender host operation into separate agents. In this repository Astra stays the solo/direct interactive host driver by default.
+High-value ideas observed so far:
 
-## 2. `RobLe3/cc-blender-skill`
+- Astra-oriented execution guidance;
+- staged modeling workflows;
+- reference cameras and overlays;
+- landmarks;
+- multiview inspection;
+- bounded Blender tooling;
+- reusable modeling/validation/GN/character workflows.
 
-Repository: https://github.com/RobLe3/cc-blender-skill
+Inspect the current code before reusing anything. Borrow mechanisms, not necessarily its overall topology.
 
-Status: **highest-value reference-analysis candidate**.
+### `RobLe3/cc-blender-skill`
 
-Observed relevant modules include:
+https://github.com/RobLe3/cc-blender-skill
 
-- `reference-to-3d`
-- `reference-analysis-validator`
-- `source-part-segmentation`
-- `contour-to-mesh`
-- `orthographic-registration`
-- `multiview-constraint-solver`
-- `texture-driven-mesh-fitting`
-- `landmark-fit-repair`
-- `multiview-fit-loop`
-- `fit-repair-optimizer`
-- `reference-look-calibration`
+Especially interesting for reference-driven work:
 
-Useful concepts already present:
-
-- source manifests;
+- source-part segmentation;
+- contour analysis;
+- orthographic registration;
 - masks/components/landmarks;
-- render/reference overlays;
-- part counts;
-- centroids/bounding boxes;
-- SSIM/IoU as bounded validation metrics;
-- compare-like-with-like modality rules;
-- render → compare → adjust → render loops;
-- source-part segmentation and landmark repair.
+- overlays;
+- multiview fitting;
+- render → compare → adjust loops;
+- image-analysis helpers.
 
-### Reuse direction
+This is an obvious place to look before rebuilding deterministic visual-analysis utilities.
 
-Inspect and replay its analyzers before writing new versions of:
+### `CheshireJCat/create-3d-model-skill`
 
-- edge-map generation;
-- silhouette extraction;
-- region-mask comparison;
-- landmark fitting;
-- paired overlays;
-- multiview fit loops;
-- image/reference manifests.
+https://github.com/CheshireJCat/create-3d-model-skill
 
-Keep this repo's stronger explicit contracts unless upstream proves equivalent behavior:
+A Codex-shaped derivative of the broader reference-to-3D Skill stack. Useful if its packaging or helper set can be reused directly.
 
-- boundary-class taxonomy;
-- explicit occlusion graph;
-- `UNKNOWN` handling;
-- model-side Depth/Normal/exact object-region masks;
-- mandatory paired semantic close-ups;
-- Astra-solo active perception.
+### `nodecue/blender-node-skills`
 
-Metrics such as SSIM/IoU remain evidence, not semantic truth.
+https://github.com/nodecue/blender-node-skills
 
-## 3. `CheshireJCat/create-3d-model-skill`
-
-Repository: https://github.com/CheshireJCat/create-3d-model-skill
-
-Status: **practical Codex-native base candidate**.
-
-This project packages the RobLe3-style stack for Codex with one entry point, many on-demand modules, image-analysis/validation helpers, scene-safety handling, screenshot inspection, versioned `.blend` preservation, and output validation.
-
-### Reuse direction
-
-If the target harness benefits from an already Codex-shaped Skill tree, inspect this before manually porting the full upstream layout.
-
-Do not assume its defaults equal this repository's final policy; retain Astra-solo and the visual-structure contract.
-
-## 4. `nodecue/blender-node-skills`
-
-Repository: https://github.com/nodecue/blender-node-skills
-
-Status: **Geometry Nodes component candidate**.
-
-Useful observed direction:
-
-- dedicated Geometry Nodes Skill;
-- version/evidence-aware node/socket knowledge;
-- graph readback → verify → repair;
-- avoidance of unnecessary `Realize Instances`;
-- correspondence with normal Blender naming/tutorial language.
-
-### Reuse direction
-
-Use this as a candidate lower-level GN knowledge/adapter layer.
-
-Keep this repository's higher-level procedural-authoring decisions above it:
-
-- manual-source wrapper vs full generator;
-- semantic part interfaces;
-- contact/support solvers;
-- environment/layout architecture;
-- design parameter vs derived parameter policy.
-
-## 5. Comparison baselines
+A strong seed for Geometry Nodes knowledge, node/socket/version handling, and graph-oriented agent workflows.
 
 ### `Aztech-Lab/EZ_Blender`
 
-Repository: https://github.com/Aztech-Lab/EZ_Blender
+https://github.com/Aztech-Lab/EZ_Blender
 
-Useful as an **orchestrated baseline**. Its Planner + specialized agent topology is intentionally different from this repository's Astra-solo default.
-
-Benchmark against it where possible before claiming that solo operation is faster/better.
+Interesting because it explores a very different multi-agent Plan-and-ReAct topology. Even if this repository ultimately prefers Astra-solo operation, contrary architectures are useful research evidence.
 
 ### `achimala/dream-loop`
 
-Repository: https://github.com/achimala/dream-loop
+https://github.com/achimala/dream-loop
 
-Useful prior art for closed-loop visual target → create → critic → iterate behavior.
-
-Borrow the evidence/iteration idea. Do not automatically adopt a separate live visual critic because this repository aims to keep live visual/spatial state inside the same Astra context.
+Interesting for visual closed-loop iteration and critic-driven refinement.
 
 ### `Top3d-ai/world-builder`
 
-Repository: https://github.com/Top3d-ai/world-builder
+https://github.com/Top3d-ai/world-builder
 
-Useful environment/world-building prior art for reference-driven scene generation, repeatable multi-angle renders, and iterative refinement.
+Interesting for autonomous environment/world construction and repeated scene refinement.
 
-Use it especially when designing environment/layout fixtures, while isolating provider-specific assumptions.
+## Questions worth researching
 
-## 6. Current integration target
+This is intentionally open-ended. Examples:
 
-The implementation should be compositional:
+- How much better is Astra at direct GUI manipulation than scripted Blender control for different task classes?
+- Can Astra discover and maintain spatial state reliably enough to avoid a large adapter layer?
+- Which visual augmentations materially improve fine-detail recognition, and which merely add noise?
+- Can semantic segmentation or correspondence be generated on demand more effectively than fixed CV pipelines?
+- Can reference/model camera fitting be solved automatically enough to make visual comparison dramatically better?
+- What procedural abstractions make Geometry Nodes easiest for an AI to author and repair?
+- Can parts, anchors, contacts and support relations become a general scene-assembly language?
+- Are there useful ideas in CAD constraint solvers or robotics contact reasoning that outperform ad-hoc GN logic?
+- How should an AI choose its next view or zoom level to reduce uncertainty fastest?
+- Which parts of existing Skills are actually useful in real Blender sessions rather than attractive on paper?
+- What would a Blender workflow look like if designed specifically for a frontier multimodal model rather than for a human artist?
 
-```text
-Blender Agent Studio
-  -> staged host workflow / bounded evidence / benchmark ideas
+The best research questions may emerge only after implementation begins.
 
-cc-blender-skill / create-3d-model-skill
-  -> reference analysis / segmentation / overlays / landmarks / fit loops
+## Reuse policy
 
-NodeCue Blender Node Skills
-  -> version-qualified GN graph knowledge
+Before copying third-party code, inspect current source, provenance and license.
 
-THIS REPOSITORY
-  -> Astra solo/direct host policy
-  -> research-only subagent boundary
-  -> active multi-scale observation
-  -> paired semantic close-up requirement
-  -> boundary classification
-  -> occlusion graph
-  -> Blender Depth/Normal/exact-mask ambiguity breakers
-  -> procedural-leverage-first GN routing
-  -> integrated eval/promotion contract
-```
+Prefer reuse when it saves work or preserves a stronger mechanism. Prefer a fresh implementation when integration cost, assumptions, quality or licensing make reuse worse.
 
-## 7. What appears to remain unique
-
-As of the architecture scan, no inspected public Skill was found that explicitly combines all of these in one contract:
-
-- Astra as solo/direct interactive Blender driver;
-- research-only subagents;
-- mandatory paired reference/model detail inspection;
-- semantic region decomposition before local repair;
-- boundary taxonomy separating silhouette / occlusion / construction / material / shading;
-- explicit occlusion graph;
-- model-side Depth / Normal / exact semantic masks as ambiguity breakers;
-- Geometry Nodes procedural-leverage-first authoring;
-- tutorial/practitioner method mining → replay → transfer verification → Skill promotion.
-
-That integration layer is the primary reason for this repository to exist.
+Do not preserve local architecture merely to differentiate this repository from upstream. If an existing solution is already better, use it.
