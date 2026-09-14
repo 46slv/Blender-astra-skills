@@ -1,377 +1,214 @@
-# Visual Analysis — Perception Before Judgement
+# Visual analysis — tools for seeing better
 
-## Purpose
+This document is a collection of promising ways to improve Astra's perception during Blender work.
 
-Astra should not decide fine reference fidelity from one broad RGB screenshot.
+It is not a required pipeline. Astra should use, combine, replace, or ignore these ideas according to the actual visual problem.
 
-Before local repair, build enough visual structure to distinguish:
+## Core idea
 
-- silhouette;
-- semantic regions;
-- boundary type;
-- overlap/occlusion;
-- attachment/contact;
-- stable landmarks;
-- model-side geometric truth.
+Fine 3D work can fail when the model acts on an image before it has actually understood the relevant local structure.
 
-The goal is not to replace Astra vision with classical CV. The goal is to **make the relevant evidence explicit before asking Astra to judge or repair**.
+A useful strategy is to improve the observation before improving the object.
 
-## 1. Multi-scale observation
-
-### O0 — Context overview
-
-Use for:
-
-- full asset/scene context;
-- gross silhouette/proportion;
-- major placement;
-- navigation.
-
-O0 alone cannot establish fine-detail or final PASS.
-
-### O1 — Target-framed view
-
-Frame the target part/asset so it occupies useful screen area. Use task-specific front/side/back/3/4 or other fixed views.
-
-Check:
-
-- silhouette;
-- part relationships;
-- major seams/attachments;
-- side effects from local repair.
-
-### O2 — Paired semantic close-up
-
-For changed/high-risk/reference-critical regions, enlarge **both**:
+Possible sequence:
 
 ```text
-REFERENCE CROP        MODEL CROP
-same semantic region  same semantic region
-same intended view    matched view/camera
-similar framing       similar screen occupancy
-same orientation      same orientation
+notice uncertainty
+  ↓
+look closer / change view
+  ↓
+make hidden structure more explicit if useful
+  ↓
+compare reference and model at comparable detail
+  ↓
+form a better hypothesis
+  ↓
+edit
+  ↓
+look again
 ```
 
-Do not accept detail if only one side is enlarged or the feature remains only a few pixels wide.
+The important part is not the sequence itself. The important part is refusing to treat low-information perception as high-confidence understanding.
 
-### O3 — Diagnostic / structural view
+## 1. Paired detail inspection
 
-When the cause remains ambiguous, add only the evidence needed to disambiguate:
+When reference fidelity matters, it is often better to inspect the same semantic region on both sides:
 
-Reference side:
+```text
+REFERENCE                  MODEL
+same feature               same feature
+useful enlargement         useful enlargement
+similar orientation        matched orientation when possible
+similar framing            similar screen occupancy
+```
 
-- grayscale/high-contrast;
-- edge map;
+This is especially useful for eyes, mouth, hairline, seams, hinges, mounts, contact points, joints and other small high-information regions.
+
+A broad reference next to a close model, or vice versa, can hide meaningful differences.
+
+## 2. Structural views that may help Astra
+
+Raw RGB is only one observation.
+
+Useful derived views may include:
+
 - silhouette;
-- semantic region mask;
-- boundary classification;
-- landmark/junction map;
-- occlusion/overlap hypothesis.
-
-Model side:
-
-- exact object/part mask;
-- alpha/silhouette;
+- grayscale / contrast-enhanced view;
+- Canny/Sobel or other edge extraction;
+- semantic part masks;
+- landmarks / junctions;
+- aligned overlay;
+- region difference;
+- wireframe / topology;
+- face orientation;
+- Blender object/material identity;
 - Depth;
 - Normal;
-- material/object index or Cryptomatte where appropriate;
-- Workbench outline/cavity;
-- wireframe/topology;
-- face orientation / x-ray;
-- GN debug/intermediate geometry;
-- exact scene landmarks/anchors.
+- Cryptomatte/object masks;
+- Geometry Nodes intermediate/debug geometry.
 
-### O4 — Final inspection sweep
+Use only what answers the current uncertainty.
 
-Revisit:
+## 3. Semantic decomposition
 
-- changed regions;
-- previous defects;
-- identity-critical regions;
-- attachment/contact regions;
-- consumer-risk regions.
+Before repairing a local feature, it can help to understand what region is actually being discussed.
 
-## 2. Visual Structure Packet
-
-Build this only to the depth needed by the task.
-
-```yaml
-comparison_packet:
-  semantic_region: face.eye_left
-  reference:
-    raw_crop: ...
-    silhouette: ...
-    edge_map: ...
-    semantic_mask: ...
-    landmarks: ...
-    boundary_hypotheses: ...
-  model:
-    raw_crop: ...
-    exact_region_mask: ...
-    silhouette: ...
-    depth: ...
-    normal: ...
-    wireframe: ...
-  correspondence:
-    matched_view: ...
-    aligned_overlay: ...
-    landmark_delta: ...
-    silhouette_delta: ...
-  result: PASS|FAIL|UNKNOWN
-  unresolved: [...]
-```
-
-Astra should interpret this packet, not blindly obey one metric.
-
-## 3. Semantic region decomposition
-
-Before saying “the eye is wrong,” decide what the eye region is.
-
-Example:
-
-```yaml
-region_tree:
-  character:
-    head:
-      face:
-        eye_left:
-          upper_lid: {}
-          lower_lid: {}
-          iris: {}
-        eye_right: {}
-        nose: {}
-        mouth: {}
-      hair:
-        bangs: {}
-        side_lock_left: {}
-        side_lock_right: {}
-        back_mass: {}
-```
-
-Rules:
-
-- only visible evidence may be marked confirmed;
-- hidden/occluded shape remains `inferred`;
-- keep region-boundary confidence;
-- preserve crop/resize coordinate transforms back to the original reference;
-- model-side semantic masks should use exact Blender scene data when available instead of re-inferring part identity from RGB.
-
-## 4. Boundary taxonomy
-
-Low-level edges are not automatically modeling edges.
-
-Classify boundaries where relevant:
+Examples:
 
 ```text
-SILHOUETTE_BOUNDARY
-OCCLUSION_BOUNDARY
-CONSTRUCTION_BOUNDARY
-MATERIAL_BOUNDARY
-SHADING_BOUNDARY
-TEXTURE_DETAIL
-UNKNOWN_BOUNDARY
+head
+  face
+    left eye
+    right eye
+    nose
+    mouth
+  hair
+    bangs
+    side locks
+    back mass
 ```
 
-Geometry repair should normally be driven by silhouette, occlusion, or construction boundaries.
+or
 
-Do not model a shadow, highlight, texture line, or material break as geometry simply because Canny/Sobel produced an edge.
-
-## 5. Occlusion / overlap graph
-
-Represent front/back and contact semantics explicitly when they matter.
-
-```yaml
-occlusion_graph:
-  - front: hair.bangs
-    back: face.forehead
-    relation: occludes
-    confidence: high
-  - front: sleeve
-    back: upper_arm
-    relation: covers
-    confidence: high
-  - front: lamp.shade
-    back: bulb_socket
-    relation: partial_occlusion
-    confidence: medium
+```text
+lamp
+  base
+  pole
+  arm
+  joint
+  shade
+  cable
 ```
 
-Useful relations:
+The decomposition does not need to become a formal schema. It is useful when it improves reasoning, correspondence, or edit locality.
 
-- `occludes`
-- `covers`
-- `partial_occlusion`
-- `touches`
-- `attached_to`
-- `separated_from`
-- `passes_behind`
-- `passes_in_front`
-- `inside`
-- `unknown`
+Hidden/occluded geometry should remain an inference rather than silently becoming source truth.
 
-T-junctions and edge termination are evidence, not certainty. Stylized linework/shadow can create false cues.
+## 4. Boundaries are not all the same
 
-If multiple reference views exist, reconcile the same semantic region across views. Conflicts remain conflicts; do not average them away.
+An extracted line may represent very different things:
 
-## 6. Landmark / junction map
+- outer silhouette;
+- one object occluding another;
+- a real construction seam or hard shape break;
+- a material/color boundary;
+- shadow or highlight;
+- texture/printed detail;
+- an artifact or uncertain cue.
 
-Stable landmarks can localize repair better than whole-image similarity.
+This distinction matters because only some boundaries should drive geometry edits.
 
-Character examples:
+Classical edge detection is useful evidence, not semantic truth.
+
+## 5. Overlap and occlusion
+
+Many important 3D relationships are easier to reason about as front/back or contact relations than as isolated 2D contours.
+
+Examples:
+
+- bangs pass in front of forehead;
+- sleeve covers upper arm;
+- lamp shade partially hides socket;
+- chair leg touches floor;
+- wall fixture attaches to wall but remains separated by a mount depth.
+
+T-junctions and terminating contours can suggest these relationships, but stylized linework and shadows can create false cues.
+
+When multiple reference views exist, use them to resolve uncertainty rather than averaging contradictions away.
+
+## 6. Landmarks and correspondence
+
+For some tasks, a few stable points are more useful than whole-image similarity.
+
+Examples:
 
 - eye corners;
-- iris/pupil center;
-- nose tip / nostril endpoints;
+- iris center;
 - mouth corners;
 - chin bottom;
-- ear attachment;
 - hairline intersections;
-- shoulder seam / cuff endpoints.
-
-Prop examples:
-
 - hinge center;
 - mount axis;
-- rim extrema;
-- cable exit;
-- contact point.
+- shade rim extrema;
+- floor-contact corners.
 
-Environment examples:
+If many landmarks move together, camera/framing may be the problem rather than local geometry.
 
-- floor contact corners;
-- wall mount center;
-- doorway corners;
-- trim intersections.
+## 7. Blender-side truth
 
-If many landmarks move together, inspect camera/framing before deforming local geometry.
+The model side often has information the reference side does not.
 
-## 7. Deterministic CV helpers
+If Blender already knows the object, part, depth, surface normal, topology, transform or node relationship exactly, prefer that state over asking Astra to infer the same fact from an RGB screenshot.
 
-Potential helpers:
+This can help distinguish:
 
-- Canny / Sobel edge extraction;
-- silhouette extraction;
-- contour hierarchy;
-- morphology for mask cleanup;
-- aligned overlay;
-- region-mask IoU/centroid/bbox;
-- landmark displacement;
-- edge-distance maps.
+- dent vs shadow;
+- overlap vs material boundary;
+- surface-angle error vs lighting difference;
+- gap vs near-contact;
+- wrong part vs wrong appearance.
 
-Rules:
+## 8. Classical CV and metrics
 
-- thresholds are image/dataset dependent; do not hard-code universal gates without fixture evidence;
-- compare like with like: edge↔edge, silhouette↔silhouette, mask↔mask;
-- processed images are evidence, not replacements for source truth;
-- preserve coordinate transforms after crop/resize/rotation/perspective normalization;
-- SSIM/IoU/edge metrics cannot establish semantic correctness alone.
+OpenCV-style helpers can be useful for deterministic evidence preparation:
 
-## 8. Model-side ground truth
+- edges;
+- contours;
+- connected components;
+- masks;
+- bounding boxes;
+- centroids;
+- morphology;
+- geometric transforms;
+- overlay/difference images;
+- SSIM/IoU or related metrics in appropriate cases.
 
-Use Blender internal truth instead of re-inference whenever possible.
+Do not let a convenient metric become the objective unless the actual task justifies it.
 
-Preferred sources:
+A high silhouette IoU can coexist with a bad 3D model. A low pixel similarity can be caused by camera, lighting, texture or projection rather than geometry.
 
-```text
-scene semantic part
-→ exact object / collection / material / named-attribute identity
-→ render-space mask / landmark / depth / normal
-→ paired comparison against reference inference
-```
+## 9. Repair locality
 
-This is especially important when RGB ambiguity could confuse:
+Better perception should make edits more local, not merely produce more analysis artifacts.
 
-- shadow vs dent;
-- material boundary vs part boundary;
-- overlap vs gap;
-- contact vs near-contact;
-- surface-angle difference vs lighting difference.
+If Astra identifies a problem in one bang, hinge, seam or contact region, preserve surrounding accepted work unless evidence points to a broader cause.
 
-## 9. Repair scope from segmentation
+After a repair, compare the relevant local region again and also look at enough surrounding context to notice side effects.
 
-Convert semantic understanding into a bounded write set.
+## 10. Open research questions
 
-```yaml
-repair_scope:
-  semantic_region: hair.bangs.left
-  model_region: exact_scene_ref
-  neighboring_protected:
-    - eye_left
-    - forehead
-    - side_lock_left
-  allowed_changes:
-    - local_curve_shape
-    - local_root_position
-  forbidden_changes:
-    - global_head_scale
-    - eye_geometry
-```
+Astra should investigate alternatives rather than assuming the techniques above are best.
 
-A local defect must not justify broad asset mutation without new evidence.
+Interesting directions include:
 
-## 10. Repair loop
+- learned segmentation and semantic correspondence;
+- vision-language segmentation;
+- feature matching across stylized references and renders;
+- depth/normal estimation from reference images;
+- differentiable or optimization-based camera/shape fitting;
+- active view selection;
+- perceptual embeddings for local shape comparison;
+- 3D-aware vision models;
+- techniques from robotics/visual servoing for deciding what to observe next.
 
-```text
-O0/O1 raw pair
-→ choose defect region
-→ O2 paired close-up
-→ if ambiguous: build Visual Structure Packet + O3
-→ classify likely cause:
-     geometry / material / lighting / camera / unknown
-→ RepairTicket
-→ smallest coherent mutation
-→ regenerate the SAME region packet
-→ compare before/after under matched conditions
-→ O1 broader regression
-→ O4 final sweep
-```
-
-Do not change comparison camera/crop and then claim the result improved unless the camera change itself was the intended repair.
-
-## 11. Visual receipt
-
-```yaml
-visual_receipt:
-  purpose: overview|target|detail|diagnostic|final
-  target_semantics: [...]
-  view: front|side|back|three_quarter|free|diagnostic
-  scale_class: context|target_framed|region_close
-  comparison_reference: ...
-  paired_model_view: ...
-  changed_regions_visible: [...]
-  risk_regions_visible: [...]
-  structural_evidence:
-    - raw
-    - silhouette
-    - edge
-    - region_mask
-    - occlusion
-    - landmark
-    - depth
-    - normal
-    - object_mask
-    - wireframe
-  result: PASS|FAIL|UNKNOWN
-  unknown_because: ...
-```
-
-Verifier guards:
-
-- fine detail / identity / attachment / topology-surface checks cannot PASS without region-close evidence;
-- final PASS cannot come from O0 only;
-- `UNKNOWN` does not auto-promote to PASS;
-- detail comparison cannot PASS when reference/model are not meaningfully paired.
-
-## 12. Failure classes to test
-
-- `BROAD_SCREENSHOT_FALSE_PASS`
-- `REFERENCE_DETAIL_NOT_ZOOMED`
-- `MODEL_DETAIL_NOT_ZOOMED`
-- `UNPAIRED_SCALE_COMPARISON`
-- `SHADING_EDGE_MISTAKEN_FOR_GEOMETRY`
-- `OCCLUSION_RELATION_MISREAD`
-- `SEMANTIC_REGION_BOUNDARY_UNCLEAR`
-- `MODEL_STRUCTURE_REINFERRED_FROM_RGB`
-- `CAMERA_MISMATCH_FALSE_DIFF`
-- `REPAIR_SCOPE_TOO_BROAD`
-- `UNKNOWN_PROMOTED_TO_PASS`
+These are research prompts, not implementation requirements.
