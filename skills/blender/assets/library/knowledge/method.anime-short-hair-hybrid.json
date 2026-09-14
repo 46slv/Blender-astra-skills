@@ -1,0 +1,72 @@
+{
+  "id": "method.anime-short-hair-hybrid",
+  "kind": "method",
+  "title": "Anime short hair: shared-root shell plus modular clumps",
+  "summary": "Candidate authoring method for stylized mesh hair: keep shared-root continuity where it matters, use independent ribbon clumps where local deformation matters, and preserve special curls/forks as reusable accent sources instead of forcing one universal generator.",
+  "terms": [
+    "anime short hair bangs shared root shell ribbon clump mesh hair",
+    "stylized character hair topology layered clumps fringe side back",
+    "アニメ ショートヘア 前髪 毛束 トポロジー 根元 共有 シェル",
+    "髪 モデリング 束 カール ハネ 前髪 横髪 後ろ髪"
+  ],
+  "uses": [
+    "stylized/anime mesh-hair authoring",
+    "reference-driven bangs and face framing",
+    "choosing between connected shell patches and independent clumps",
+    "small head-only hair experiments before full-character adoption"
+  ],
+  "principle": {
+    "invariant": "Choose topology by the relationship the region must preserve, not by a single universal hair primitive.",
+    "families": [
+      "SHARED_ROOT_SHELL: scalp-conformed local patch, longitudinal flow, partial slits, preserved root bridge, independently shaped strip tips",
+      "SOLID_RIBBON_CLUMP: thin prism/ribbon/wedge with control sections for bend, width, depth, roll, taper and tip",
+      "COMPOUND_ACCENT_CLUMP: authored or modular curl/fork/hook/hane source kept when a generic generator would lose silhouette quality"
+    ],
+    "layering": "Topology family and hairstyle role are separate. BASE/PRIMARY/INNER/ACCENT describe visual function, not construction.",
+    "selection": "Continuity-heavy region -> consider shell; independently deforming lock -> consider ribbon clump; identity-heavy special curl/fork -> consider compound/manual source.",
+    "reference_fit": "Prioritize front/side silhouette, bangs-to-face boundary, negative space around face, parting/flow, then depth and accents."
+  },
+  "procedure": {
+    "shared_root_shell": "surface fit -> control sections -> longitudinal flow topology -> partial slit/cut graph -> preserve root bridge -> strip-tip shaping",
+    "solid_ribbon_clump": "ribbon/prism/wedge -> section placement -> bend/roll -> width/depth -> taper -> tip shaping",
+    "assembly": "combine families as needed -> layer primary/inner/accent -> tune overlap and silhouette -> keep source editable -> derive consumer output only when needed"
+  },
+  "experiment": {
+    "status": "optional, not a gate",
+    "pattern": "Preserve the accepted source, use a duplicate candidate .blend or isolated collection, derive/copy only the head/scalp needed, test representative hair approaches, inspect front/side/3-4 and close topology, and request human visual audit when it would resolve a genuine ambiguity.",
+    "examples": [
+      "shared-root front shell vs fully independent front clumps",
+      "manual ribbon clumps vs curve-driven wrappers",
+      "manual accent source vs generalized generator"
+    ],
+    "judge_by": [
+      "silhouette",
+      "face framing and negative space",
+      "overlap",
+      "editability",
+      "repair cost"
+    ]
+  },
+  "evidence": [
+    {
+      "status": "observed + inferred",
+      "basis": "User-provided chronological summary and still frames inspected 2026-09-15; practitioner source https://www.youtube.com/watch?v=QjwhdX6AHnU",
+      "claim": "Frames show a local scalp-conformed patch with longitudinal/cross-loop topology and partial slits, plus independent ribbon/wedge clumps, compound curled elements and layered exploded assembly. The three-family abstraction is an inferred reusable interpretation."
+    }
+  ],
+  "reference_path": "skills/blender/references/anime_hair.md",
+  "limits": [
+    "Not host-replayed from the full source video in this repo.",
+    "Not yet transferred to ss or another independently authored character.",
+    "Does not prove a Geometry Nodes implementation, deformation quality, dynamics or export readiness.",
+    "A better representation discovered from the live reference/model should replace this candidate rather than conforming to it."
+  ],
+  "promotion": {
+    "status": "candidate transfer",
+    "next": "Use only when relevant; if a real character/head-only test succeeds and the method saves work, add the tested result and limits. Revise or retire it if the transfer fails."
+  },
+  "provenance": {
+    "source": "Practitioner tutorial interpreted from user-provided summary/still evidence; no third-party model or tutorial asset copied into the repository."
+  },
+  "revision": 1
+}

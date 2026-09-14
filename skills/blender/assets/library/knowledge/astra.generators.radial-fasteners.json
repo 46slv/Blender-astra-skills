@@ -1,0 +1,60 @@
+{
+  "id": "astra.generators.radial-fasteners",
+  "kind": "asset",
+  "title": "Radial Fasteners v1",
+  "summary": "Geometry Nodes modifier generator. Count 3..64; radius fixed at 0.10 m; hex bolts radius 0.0055 m, depth 0.007 m, centers at local Z=0. Brass included.",
+  "terms": [
+    "fastener",
+    "bolt",
+    "radial",
+    "geometry-nodes",
+    "radial circular distribution repeated bolts",
+    "放射 円形 配置 ボルト ネジ"
+  ],
+  "source": {
+    "file": "starter-v1.blend",
+    "kind": "node_groups",
+    "name": "Radial Fasteners v1",
+    "sha256": "2e62d4e02c121c0cfeecfae838b504e74ceece0fee7411c46825d94048261ced",
+    "asset_id": "astra.generators.radial-fasteners",
+    "asset_version": 1
+  },
+  "provenance": {
+    "source": "Project-authored starter library from lamp/shelf examples",
+    "source_url": "https://github.com/46slv/Blender-astra-skills/blob/915498d/experiments/build_asset_library.py",
+    "rights": "Project-authored; no standalone redistribution license specified.",
+    "publication": "Existing owner-authorized project PR; no third-party grant."
+  },
+  "evidence": [
+    {
+      "status": "observed",
+      "basis": "Blender 5.2.1 LTS assets.inspect on starter-v1.blend",
+      "claim": "Marked identity and native structure read in dedicated staging process."
+    }
+  ],
+  "structure": {
+    "parts": [
+      "hex bolt source",
+      "circular distribution points"
+    ],
+    "relations": [
+      "instances follow radial points"
+    ]
+  },
+  "interfaces": {
+    "controls": "Count integer 3..64",
+    "anchor": "ring centered at local origin, Z=0"
+  },
+  "uses": [
+    "radial repeated components",
+    "bolt ring around lamp base"
+  ],
+  "limits": [
+    "Fixed ring radius 0.10 m; bolt radius 0.0055 m and depth 0.007 m.",
+    "No configurable radius or surface contact solver."
+  ],
+  "links": [
+    "astra.lighting.articulated-lamp"
+  ],
+  "revision": 1
+}

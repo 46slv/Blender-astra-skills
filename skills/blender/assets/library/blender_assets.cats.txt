@@ -1,0 +1,7 @@
+# Blender Asset Catalog Definition File
+VERSION 1
+
+74336bf7-95dc-5acf-8d55-422e9e982a24:Lighting:Lighting
+24246ec6-1506-57db-90fb-4326cc67e502:Furniture:Furniture
+18c7b92a-ec96-509e-9c78-bd76d0940626:Generators:Generators
+d9a326d5-a39e-5b81-b924-60bccb7672e1:Materials:Materials

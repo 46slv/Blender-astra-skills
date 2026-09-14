@@ -1,0 +1,38 @@
+{
+  "id": "method.rigid-pivot-chain",
+  "kind": "method",
+  "title": "Local pivot hierarchy for rigid articulated parts",
+  "summary": "Separate placement from local joint frames so a rigid assembly can be positioned and posed without baking mesh transforms.",
+  "terms": [
+    "joint hinge pivot rigid articulated assembly",
+    "関節 支点 回転軸 剛体 組立"
+  ],
+  "principle": {
+    "invariant": "Parent rigid parts to the joint that moves them; downstream joints inherit upstream motion.",
+    "interface": "One assembly placement frame plus named local-axis joint rotations.",
+    "variation": "Pose native joint frames; keep handmade shell and rigid source geometry."
+  },
+  "links": [
+    "astra.lighting.articulated-lamp"
+  ],
+  "evidence": [
+    {
+      "status": "tested",
+      "basis": "artifacts/evidence.json: asset_library (relative to repository)",
+      "claim": "Independent lamp append and head rotation move bulb geometry without moving another lamp."
+    }
+  ],
+  "limits": [
+    "Only this lamp has been tested; transfer to other assemblies is inferred.",
+    "Static cable does not follow all joint poses; use a separate deformation/refit method.",
+    "This is not evidence for character skinning topology or deformation."
+  ],
+  "promotion": {
+    "status": "candidate transfer",
+    "next": "Try another independently authored rigid assembly before introducing a generic rig builder."
+  },
+  "provenance": {
+    "source": "Project-authored lamp example and native hierarchy; no third-party model copied."
+  },
+  "revision": 1
+}

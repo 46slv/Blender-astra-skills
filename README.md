@@ -1,1 +1,92 @@
-# Blender-astra-skills
+# Blender Astra Skill
+
+Astraが同じBlenderの状態を見ながら、操作・比較・修正を続けるための実用Skill。
+Blender 5.2.1で制作、画像比較、GN変更、保存後の再読込まで実行済みです。
+完成済みの固定Skillとはせず、実制作で役立った方法・知識・Assetを蓄積して育てます。
+
+**入口: [skills/blender/SKILL.md](skills/blender/SKILL.md)**
+
+![実際に制作した編集可能なランプ](artifacts/lamp.png)
+
+## できること
+
+- 追加アドオン・MCP・外部サービスなしで、専用Blenderへ短いPython編集を継続実行。
+- 画像中の一点を、評価後の部品・3D位置・法線へ対応付ける。GNインスタンスにも対応。
+- カメラのずれと形状のずれを分け、対応点と少数の編集パラメータから補正。
+- 部品の見通しを比較し、隠れた細部を確認しやすい視点を選択。
+- GNの実際のソケット/APIを調べ、段数・寸法などの意味のある入力を変更。
+- 関節、曲線、シェル、インスタンス、生成ソースを保持した成果物を保存。
+- 既存Asset・generator・methodを確認し、再利用・改良した成果を次の制作へ残す。
+
+## 実運用するAsset Library
+
+[標準Blender Library](skills/blender/assets/library)に、可動ランプ、可変棚、
+棚と放射状ボルトのGN generator、5種のMaterialを収録しています。
+4 catalog・9 Assetそれぞれにpreview、用途と制約、出典、版を持たせました。
+外部取得物のライセンス・依存ファイル・公開可否も含む
+[発見・取り込み・蓄積の方法](skills/blender/references/assets.md)をSkillから参照できます。
+
+![Libraryだけから別シーンへ再利用したランプ・棚・Material](artifacts/asset-reuse.png)
+
+この画像はLibraryからappendした別シーンです。ランプの独立コピー、関節変更、
+棚の寸法・段数変更、GN単体とMaterialの再利用、保存後の再読込を確認しました。
+Libraryは約615 KBで、元の制作シーンや外部ファイルに依存しません。
+Skillのglobal登録やBlender設定の永続保存は行っていません。
+
+## 構造から探し、制作経験を残す
+
+Libraryの実体とは別に、9 Assetの意味情報と2 Methodを小さな知識カードとして
+持たせました。Skill本文は探し方・理解・再利用・学習の方法を担当し、増える情報は
+各Libraryの `knowledge/*.json` に保存します。今後のproject/private Libraryも
+明示したrootから検索でき、公開用のSkillへ個人資産を混ぜる必要はありません。
+
+```text
+python skills/blender/scripts/knowledge.py "支柱 横板 段数 間隔" --full
+```
+
+名前を知らなくても部品・関係・用途から候補を探し、知識カードの制約と根拠を読み、
+元ファイルの版を確認してappendできます。検索は軽量な語句照合で、意味の一致を
+保証するものではありません。使って分かった構造・失敗・有効な変更をカードへ戻し、
+共通原理が次の制作に役立つときにMethodや既存generatorの拡張へ育てます。
+[実際の使い方と学習手順](skills/blender/references/knowledge.md)を参照してください。
+
+![構造検索から既存棚を再利用した低い展示台と高いラック](artifacts/knowledge-reuse.png)
+
+この2点は同じ既存GNを別々にappendしたものです。新しいローカルLibraryへのAsset保存、
+知識の追記、再検索、保存後の再読込・独立編集まで実行しました。棚板の重なる条件も
+実測してMethodへ戻しています。再現は `experiments/learn_and_reuse.py` のbuildと
+`--reopen`、検索・更新の確認は `python experiments/check_knowledge.py`。
+
+## 使う
+
+このリポジトリ内ではAGENTS.mdからSkillへ案内されます。ほかの作業で使う場合は
+`skills/blender` フォルダを利用環境のSkillディレクトリへ配置するか、入口のパスを指定して読ませてください。
+既存Skillを上書きする自動インストーラや、ホスト固有の設定変更は含めていません。
+
+起動・実行コマンドは [runtime.md](skills/blender/references/runtime.md)。
+Blender内の機能はbpy/NumPyを使い、画像比較だけはホストPythonのPillow/NumPyを使います。
+
+## 試せる成果物
+
+- [編集可能な .blend](artifacts/blender-skill-examples.blend): 可動ランプと可変棚、生成ソース、接写カメラ。
+- [参照との差・修正前](artifacts/reference-before.png) / [修正後](artifacts/reference-after.png)
+- [見通しから選んだ電球の接写](artifacts/detail.png)
+- [GN変更後の棚](artifacts/shelf.png)
+- [実行結果](artifacts/evidence.json) / [判断と限界](docs/RESEARCH.md)
+
+再現する場合はリポジトリrootから新規セッションを起動し、`experiments/run_examples.py`
+を実行します。例えばセッションを `.work/reproduction/live` にすると、出力は
+`.work/reproduction/blender-skill-examples.blend` です。同梱の成果物は上書きしません。
+その後、保存ファイルを再読込して `experiments/readback.py` を実行できます。
+
+公開用の .blend は約185 KBです。自作の2シーンと生成ソースを含み、個人的な参照画像・
+外部アセット・ローカルの閲覧履歴を含まない形へ整理し、再読込とGN編集を再確認しました。
+
+## 限界
+
+これは画像一枚から何でも復元する仕組みではありません。対応点や意味のある編集変数は
+Astraが選びます。検証は既知の合成参照による補正、製品形状、GN棚が中心で、
+実写の自動対応、透明体、未知の裏側、制作水準の人体・リギング、他のBlenderバージョンは未検証です。
+
+NodeCueのMITライセンス付きノードプローブを再利用しています。
+[出典・固定commit・ライセンス](skills/blender/scripts/vendor/PROVENANCE.md)を同梱しています。
