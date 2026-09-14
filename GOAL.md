@@ -1,67 +1,60 @@
-# Goal — Build `blender-astra-modeling`
+# Goal — Build the best Blender Skill Astra can discover
 
-## Goal
+Create a genuinely useful Blender Skill that lets Astra do high-quality 3D work with as little unnecessary mediation as possible.
 
-Implement a reusable Agent Skill for high-quality Blender modeling, procedural authoring, reference-driven repair, and visual/structural verification, optimized for **Astra as the solo/direct interactive Blender driver**.
+The Skill should amplify Astra's own strengths rather than force Astra through an architecture designed in advance by a weaker understanding of the problem.
 
-The implementation should compose and adapt strong existing prior art rather than rebuild the entire Blender-agent stack from scratch.
+## Outcome
 
-## Done
+A future Astra should be able to use this repository's Skill to take on real Blender work—modeling, reference-driven refinement, procedural authoring, scene assembly, and related tasks—and reach a result that is actually usable, editable where that matters, and visually/structurally coherent.
 
-A first usable version is complete when all of the following exist and are exercised on representative fixtures:
+How that is achieved is deliberately open.
 
-1. A native Skill entry point with precise trigger/non-trigger behavior and progressive disclosure.
-2. Astra keeps live Blender observation, reasoning, host operation, repair, and final visual acceptance in one context by default.
-3. Research-only subagent boundary is enforced/documented.
-4. Multi-scale observation works: overview → target-framed → paired semantic close-up → diagnostic view when needed → final sweep.
-5. Reference/model comparison supports structured evidence preparation: silhouette, edge, region mask, landmarks, overlays, and model-side diagnostic passes where applicable.
-6. Ambiguous semantic region, boundary class, or occlusion relation remains `UNKNOWN` and blocks broad repair.
-7. Repair is localized with declared write/protected scope and the same paired comparison packet is regenerated after repair.
-8. Geometry Nodes routing supports manual-source wrappers, fully procedural generators, modular assembly, constraint/contact solving, and environment/layout workflows without forcing GN where it reduces quality or editability.
-9. Authoring source remains editable; destructive realization/export is isolated to derived outputs where required.
-10. Prior-art components are inspected, licensed appropriately, and reused/adapted when stronger than fresh implementations.
-11. Representative host fixtures in `docs/EVALS.md` pass with structural + visual evidence.
-12. The repository can explain why the resulting Skill is usable without relying on conversation history.
+Astra may keep, replace, simplify, or discard the architecture ideas currently in `docs/`. It may reuse existing public Skills, invent new mechanisms, combine visual reasoning with deterministic tools, lean heavily on Geometry Nodes, use ordinary modeling where that is stronger, or discover an approach not anticipated here.
 
-## Constraints
+## Research expectation
 
-- Do not make a giant all-knowledge `SKILL.md`. Keep decision procedure in the Skill; detailed knowledge in references/docs; deterministic evidence preparation in scripts; schemas/validators for mechanical contracts.
-- Do not create a multi-agent Blender host topology by default. A child may research; Astra owns live host manipulation and visual acceptance unless a separately qualified exception proves value.
-- Do not treat one broad screenshot as detail/final acceptance.
-- Do not infer model-side structure from RGB when Blender can expose exact scene/object/node/depth/normal/mask information.
-- Do not treat edge detection, SSIM, IoU, or any single metric as semantic truth.
-- Do not destroy source assets to satisfy export or verification convenience.
-- Do not use Geometry Nodes merely to increase node usage.
-- Do not silently copy external code without license/provenance review.
+Before settling on major design choices, investigate the space deeply.
 
-## Authority
+Generate multiple plausible approaches and research them broadly. Use Luna/subagents as research workers for independent questions and competing possibilities when useful. Search beyond Blender-specific agent projects when adjacent fields may contain better ideas.
 
-Within this repository, normal implementation, tests, docs, scripts, schemas, fixtures, and reversible branches/commits are in scope.
+Astra owns synthesis and the final design.
 
-Blender host interaction may be used for qualification when available, but source `.blend` overwrite, unrelated filesystem/network access, credentials, external paid services, release/publication, or destructive host actions require separate justification/authority.
+Interactive Blender manipulation should normally remain with Astra itself rather than being delegated to a host-operating worker, because continuity of visual/spatial state is valuable. Research is the main place where parallel delegation is encouraged.
+
+## Self-understanding
+
+Astra should discover what it can actually do in the current environment and design around those real capabilities.
+
+Do not freeze assumptions about Astra, Computer Use, image understanding, Blender tooling, Python, MCP, Geometry Nodes, or available Skill mechanisms from this document. Inspect and exploit the live capability surface.
+
+If Astra can solve part of the problem directly and elegantly, do not wrap that ability in unnecessary infrastructure.
+
+## Completion
+
+Finish the Skill, not just the architecture.
+
+The work is complete when Astra can actually use what it built for representative real Blender tasks and the result behaves like a practical tool rather than a design proposal.
+
+Use whatever checks, experiments, retries, comparisons, or live Blender work Astra judges necessary to become confident that it works. No fixed validation ritual, test count, benchmark suite, schema set, or package topology is prescribed here.
+
+Keep only machinery that proves useful.
+
+## Boundaries
+
+- preserve user/source assets unless destructive change is explicitly appropriate;
+- respect repository and host authority;
+- do not use credentials or paid/external services implicitly;
+- inspect licenses/provenance before copying third-party code;
+- do not delegate interactive Blender control merely to satisfy an orchestration pattern.
+
+Everything else is a design problem for Astra to solve.
 
 ## Starting point
 
-Read in this order:
-
-1. `AGENTS.md`
-2. `docs/ARCHITECTURE.md`
-3. `docs/VISUAL_ANALYSIS.md`
-4. `docs/PROCEDURAL_AUTHORING.md`
-5. `docs/PRIOR_ART.md`
-6. `docs/EVALS.md`
-
-## Evidence
-
-Return compact evidence for each milestone:
-
-- implemented paths and interfaces;
-- tests/validators and results;
-- exact Blender/version when host-tested;
-- structural scene/node/export evidence;
-- matched visual evidence and paired close-ups for detail work;
-- known gaps and `UNKNOWN` results;
-- prior-art provenance/license decisions;
-- fixture results and regressions.
-
-Do not claim general Skill qualification until host fixtures support it.
+1. Read `AGENTS.md`.
+2. Inspect the current repository and runtime capabilities.
+3. Read `docs/PRIOR_ART.md` and any other focused document that appears useful.
+4. Research aggressively.
+5. Decide what architecture is actually warranted.
+6. Build it to completion.
