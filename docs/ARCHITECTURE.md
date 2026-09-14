@@ -1,433 +1,193 @@
-# Architecture — `blender-astra-modeling`
+# Architecture — design space, not blueprint
 
-## 1. System thesis
+This document records strong ideas discovered so far. It is not a specification Astra must obey.
 
-The Skill is not a Blender command encyclopedia. It is a **decision + perception + repair procedure** for Astra.
+Astra may replace any part of it if research, implementation experience, or its own capabilities suggest something better.
 
-Interactive Blender work should normally stay in one Astra context:
+## 1. Central hypothesis
 
-```text
-Goal / references / consumer
-        ↓
-classify geometry truth + uncertainty
-        ↓
-retrieve only relevant methods
-        ↓
-Construction Graph + Modeling Plan
-        ↓
-Astra direct host loop
-  OBSERVE → REASON → ACT → RE-OBSERVE → REPAIR → VERIFY
-        ↓
-consumer / reopen / round-trip acceptance
-        ↓
-receipt + reusable learning
-```
+The most important architectural bet is continuity of intelligence around the live Blender state.
 
-The key optimization is continuity: the same model that saw the defect should usually remain responsible for the edit and the follow-up inspection.
-
-## 2. Responsibility boundaries
-
-### Astra
-
-Owns:
-
-- live Blender observation;
-- reference interpretation;
-- method selection;
-- GUI / Computer Use / bounded bpy / Geometry Nodes lane selection;
-- interactive mutation;
-- semantic interpretation of visual evidence;
-- local repair;
-- final visual acceptance.
-
-### Research subagent
-
-May be used for:
-
-- current Blender Manual / Python API / node lookup;
-- version differences;
-- tutorial / production-method mining;
-- external consumer/export requirements;
-- prior-art inspection;
-- long-source summarization.
-
-Does not own by default:
-
-- interactive Blender GUI;
-- main `.blend` writes;
-- Blender write APIs/MCP;
-- Computer Use;
-- repair of accepted geometry;
-- final PASS.
-
-Return a compact `ResearchPacket` only:
-
-```yaml
-question: ...
-findings: [...]
-sources: [...]
-version_scope: ...
-confidence: high|medium|low
-options: [...]
-unresolved: [...]
-```
-
-### Deterministic scripts / adapters
-
-Own mechanical tasks with stable inputs/outputs:
-
-- scene reports;
-- screenshot/render capture;
-- crop/resize/alignment bookkeeping;
-- edge/silhouette extraction;
-- Blender diagnostic passes;
-- schema validation;
-- evidence-packet completeness;
-- export/reimport smoke checks.
-
-They do not decide what the asset should look like.
-
-## 3. Skill package target
+For interactive work, keep the model that sees the scene responsible for deciding what to do next whenever practical:
 
 ```text
-blender-astra-modeling/
-  SKILL.md
-  references/
-    observation-protocol.md
-    visual-structural-analysis.md
-    method-routing.md
-    geometry-nodes-routing.md
-    repair-policy.md
-    consumer-checks.md
-  scripts/
-    scene_report.py
-    capture_fixed_views.py
-    frame_target.py
-    capture_region.py
-    make_edge_map.py
-    extract_silhouette.py
-    align_comparison_pair.py
-    compose_comparison_packet.py
-    blender_diagnostic_passes.py
-    compare_region_masks.py
-    validate_evidence_packet.py
-  schemas/
-    observation_plan.schema.json
-    visual_receipt.schema.json
-    semantic_region_map.schema.json
-    occlusion_graph.schema.json
-    comparison_packet.schema.json
-    repair_ticket.schema.json
+Astra
+  observe
+  understand
+  choose a method
+  act
+  look again
+  change its mind if needed
+  continue
 ```
 
-This is a modular target. Upstream components may replace local files when they are better, compatible, and license-safe.
+Do not split this loop into multiple agents unless doing so clearly improves the work.
 
-## 4. Skill progressive disclosure
+The likely exception is research: external knowledge gathering can parallelize without fragmenting Blender's live visual/spatial state.
 
-`SKILL.md` should stay small and own only:
+## 2. Astra should model itself before designing the Skill
 
-- trigger / meaningful non-trigger;
-- preflight;
-- Astra-solo host rule;
-- method retrieval rule;
-- active-observation loop;
-- execution-lane routing;
-- repair loop;
-- verification / stop conditions;
-- routing to focused references.
+The runtime is part of the design problem.
 
-Do not preload all Blender knowledge. Load 1–3 relevant MethodCards/references for the current problem.
+Astra should inspect what is actually available and useful now:
 
-## 5. State preflight
+- visual understanding quality and limits;
+- Computer Use / GUI control;
+- Blender/Python/API/MCP surfaces;
+- local code execution;
+- screenshot/render access;
+- Geometry Nodes access and authoring methods;
+- existing Skills and plugin mechanisms;
+- context limits and persistence;
+- research-worker availability.
 
-Before non-trivial mutation, acquire a bounded scene snapshot:
+This need not become a formal capability matrix. The point is to avoid designing wrappers around abilities Astra already has, or assuming abilities it does not.
 
-```yaml
-scene_snapshot:
-  blender_version: exact
-  blend_path: current
-  source_authority: original|working_copy|derived
-  save_state: saved|dirty|unknown
-  mode: ...
-  active_object: stable_ref|null
-  selected_objects: [...]
-  target_refs: [...]
-  target_types: [...]
-  coordinate_space: ...
-  units: ...
-  bounds: ...
-  hierarchy: ...
-  modifiers: ...
-  dependencies: ...
-  fixed_views: [...]
-  protected_set: [...]
-```
+Small probes are appropriate when they answer a real design question.
 
-Object name alone is not sufficient stable identity when a stronger current-host reference is available.
+## 3. Research architecture
 
-Non-trivial editing should use a task-scoped working copy/checkpoint rather than overwriting the source asset by default.
+Research is intentionally allowed to be much more parallel than host operation.
 
-## 6. Method representation
-
-A reusable modeling method is execution-ready only when it contains at least:
-
-- when / problem signature;
-- why / optimization target;
-- preconditions;
-- invariants;
-- write set;
-- protected set;
-- semantic actions;
-- observables;
-- decision rules;
-- postcondition / oracle;
-- failure signals;
-- rollback / local-repair boundary;
-- provenance / confidence / version scope.
-
-Method authority order:
-
-1. current user / project / consumer contract;
-2. current `.blend`, repo, runtime evidence;
-3. target Blender official docs/runtime behavior;
-4. transfer-verified local MethodCard;
-5. practitioner/tutorial evidence;
-6. mined inference.
-
-## 7. Construction routing
-
-Choose the construction family per semantic part/region rather than forcing one global style.
-
-Candidate families:
-
-- primitive composition;
-- profile + extrude;
-- profile + revolve;
-- curve + sweep;
-- shell + thickness;
-- non-destructive boolean;
-- mirror / array / instances;
-- surface conform;
-- manual retopology;
-- sculpt → retopo;
-- Geometry Nodes assembly/generation;
-- parametric CAD when exact solid constraints dominate.
-
-Hard reject a method before ranking if it:
-
-- loses a required consumer capability;
-- fails its preconditions;
-- violates a protected invariant;
-- conflicts with reference authority;
-- cannot be verified in the current runtime.
-
-Then prefer:
-
-1. consumer fit;
-2. editability / downstream compatibility;
-3. reversibility;
-4. observability / verifier strength;
-5. local repairability;
-6. deterministic execution potential;
-7. evidence strength;
-8. lower unnecessary complexity;
-9. procedural leverage when it reduces repeated manual work without degrading the contract.
-
-## 8. Stage gates
-
-### G0 — Intake / authority
-
-- exact target Blender/version/file/consumer known;
-- reference authority and inferred areas separated;
-- working-copy/source protection established;
-- baseline snapshot captured.
-
-### G1 — Structure
-
-- semantic parts / hierarchy / interfaces / scale policy defined;
-- Construction Graph exists;
-- uncertainty/hidden regions recorded.
-
-### G2 — Blockout / large form
-
-- primary silhouette, proportion, and major placement accepted from matching views;
-- do not proceed to detail while large-form mismatch remains.
-
-### G3 — Medium form / construction logic
-
-- major seams, cuts, curves, interfaces, supports established;
-- chosen modifier/GN/retopo strategy still preserves editability and local repair.
-
-### G4 — Topology / procedural / material structure
-
-Use asset-specific oracles: deformation topology, manifold/supports, modifier order, GN interface, UV/material boundaries, dependencies.
-
-### G5 — Detail / deformation / look
-
-- small detail does not break larger forms;
-- animation assets get required deformation smoke;
-- geometry problems are separated from material/lighting problems.
-
-### G6 — Consumer / round-trip
-
-- target import/export/runtime/render contract passes;
-- fresh reopen/reimport when required;
-- Completion Receipt can explain usability.
-
-## 9. Direct execution lanes
-
-Astra chooses the shortest correct lane for each coherent mutation.
-
-### GUI / Computer Use
-
-Best for:
-
-- sculpt;
-- visual retopology;
-- spatial placement;
-- node visual debugging;
-- local shape repair driven by immediate viewport feedback.
-
-### Bounded bpy / adapter
-
-Best for:
-
-- deterministic object/data creation;
-- properties;
-- modifiers/node groups;
-- hierarchy/collections;
-- exact reports;
-- repeatable validation.
-
-Guard UI/context-dependent `bpy.ops`; do not blind-retry poll/context failures.
-
-### Geometry Nodes / modifiers
-
-Best for:
-
-- parameterized generators;
-- manual-source wrappers;
-- modular part assembly;
-- repeated layouts;
-- derived contact/alignment/spacing;
-- persistent procedural authoring.
-
-Do not apply/realize merely because downstream work is inconvenient. Keep authoring source and derive export geometry separately when needed.
-
-## 10. Closed-loop repair
+For a meaningful open question, Astra can:
 
 ```text
-OBSERVE
-  current target + matched reference context
-      ↓
-SELECT METHOD / HYPOTHESIS
-      ↓
-ACT
-  smallest coherent write-set
-      ↓
-VERIFY STRUCTURE
-      ↓
-VERIFY VISUAL
-      ↓
-PASS → checkpoint / next stage
-FAIL → RepairTicket
-      ↓
-LOCAL REPAIR / STRATEGY SWITCH / ROLLBACK
+identify design question
+  ↓
+generate several plausible approaches
+  ↓
+fan out independent research to Luna/subagents
+  ↓
+collect current code, primary sources, practitioner evidence, limitations
+  ↓
+compare incompatible approaches
+  ↓
+ask a second wave of questions if the search space changed
+  ↓
+Astra synthesizes and decides
 ```
 
-One RepairTicket should represent one defect class.
+Research should not be constrained to Blender Agent repositories. Useful transfers may come from:
 
-Accepted regions become protected. Repair the defect region, then re-check both the local packet and the broader target view.
+- active perception and computer vision;
+- robotics and visual servoing;
+- CAD and constraint systems;
+- procedural modeling;
+- DCC automation;
+- scene graphs and asset systems;
+- HCI / direct manipulation;
+- graphics and differentiable rendering;
+- game/editor tooling;
+- production art workflows.
 
-Do not repeat the same repair against the same evidence state. New attempt requires new evidence or a changed hypothesis.
+Research workers return findings and evidence. They do not become the authority over the design.
 
-## 11. Structural + visual dual oracle
+## 4. Avoid architecture by anticipation
 
-Vision-only cannot prove:
+Do not create a layer because a mature system might eventually need one.
 
-- topology/manifold;
-- hierarchy/instances;
-- UV/material assignments;
-- rig/weights/shape keys;
-- external dependencies;
-- transform/scale;
-- procedural editability.
+A schema, validator, service, wrapper, cache, benchmark, abstraction, agent role, or database should appear because the actual Skill benefits from it.
 
-Structure-only cannot prove:
-
-- silhouette;
-- proportion;
-- surface artifacts;
-- design identity;
-- reference fidelity.
-
-Default evidence pair:
+Prefer this progression:
 
 ```text
-machine-readable scene/target report
-+
-matched fixed-view / paired visual evidence
+solve the task directly
+  ↓
+notice recurring friction or uncertainty
+  ↓
+extract the smallest useful mechanism
+  ↓
+keep it only if it improves subsequent work
 ```
 
-## 12. Visual architecture
+The same applies to documentation. Write what future Astra needs to make better decisions; do not narrate the project for its own sake.
 
-The visual system is active perception, not passive screenshot review.
+## 5. Existing architecture ideas worth testing
 
-```text
-O0 context overview
-→ O1 target-framed view
-→ O2 paired semantic close-up
-→ O3 diagnostic / structural view when needed
-→ O4 final inspection sweep
-```
+### Live Astra ownership
 
-For detail work, pair reference and model at the same semantic region and comparable view/framing/scale. When raw vision is ambiguous, construct a Visual Structure Packet. See `docs/VISUAL_ANALYSIS.md`.
+Astra directly owns interactive Blender observation and manipulation by default.
 
-## 13. Geometry Nodes architecture
+Luna/subagents research APIs, techniques, prior art, versions, or alternative approaches. They normally do not drive the main Blender session.
 
-Geometry Nodes is a leverage layer, not a mandatory modeling style.
+### Dynamic execution lanes
 
-Supported procedural modes:
+Astra may mix methods inside one task:
 
-1. manual source + procedural wrapper;
-2. fully procedural generator;
-3. modular part assembly;
-4. constraint/relation solver;
-5. procedural environment/layout;
-6. interactive Node Tool when a repeatable edit gesture merits one.
+- GUI / Computer Use for spatial and visually driven edits;
+- Python/API/adapter operations when exact state changes are easier that way;
+- Geometry Nodes or modifiers when persistent procedural relationships create leverage;
+- ordinary modeling, sculpting or retopology when those are the strongest primitives.
 
-Prefer semantic user inputs and derive dependent transforms. See `docs/PROCEDURAL_AUTHORING.md`.
+There is no target percentage for any lane.
 
-## 14. Safety / authority
+### Visual augmentation
 
-Default safety boundaries:
+Astra may be weaker than a skilled human at noticing some fine visual differences from a broad screenshot.
 
-- do not overwrite source `.blend`;
-- do not expose arbitrary host authority to every child agent;
-- do not grant modeling methods implicit filesystem/network/credential authority;
-- do not broad-remesh/decimate/apply/triangulate/delete/recalculate/bake without a method, checkpoint, and postcondition;
-- external paid/generative providers require separate authority;
-- current Blender adapter/MCP transport is not itself a sandbox.
+Promising remedies include:
 
-## 15. Prior-art policy
+- enlarging both reference and model at the same region;
+- silhouette or edge views;
+- semantic segmentation / part masks;
+- landmarks and correspondence;
+- overlap / occlusion reasoning;
+- Blender-side Depth, Normal, object identity, topology or other exact state;
+- aligned overlays and differences;
+- alternative views when projection is ambiguous.
 
-Before implementing a helper or workflow, inspect `docs/PRIOR_ART.md` and current upstream code.
+These are tools for perception, not a mandatory pipeline. See `VISUAL_ANALYSIS.md` for the current possibility space.
 
-Reuse/adapt first when appropriate. Preserve provenance and license obligations. Do not copy code based only on remembered behavior or a stale summary.
+### Procedural leverage
 
-## 16. Qualification boundary
+Geometry Nodes may be especially valuable for:
 
-The architecture becomes a qualified active Skill only after representative fixtures prove that a fresh Astra can:
+- reusable source parts;
+- parametric families;
+- modular assembly;
+- automatic contact/alignment;
+- repeated layout;
+- scene/environment construction;
+- deriving dependent values instead of exposing raw transforms.
 
-- keep live host control;
-- retrieve relevant methods without loading the whole corpus;
-- actively zoom/focus into uncertain regions;
-- compare reference/model at matched detail scale;
-- use structured evidence rather than hallucinated certainty;
-- perform local repair without protected-region regressions;
-- select GUI/bpy/GN lanes appropriately;
-- preserve editability;
-- pass consumer/reopen checks;
-- achieve acceptable quality/latency against the orchestrated baseline.
+Do not proceduralize something merely to satisfy this hypothesis. See `PROCEDURAL_AUTHORING.md` for candidate patterns.
 
-Until then, report `HOST_VALIDATION_PENDING`.
+### Prior-art composition
+
+Strong existing work should be reused or adapted where it is genuinely better than fresh implementation. `PRIOR_ART.md` is a seed list, not an exhaustive map.
+
+## 6. Visual state and detail
+
+One useful invariant remains: do not pretend to understand detail that is not actually visible.
+
+If Astra cannot distinguish a feature, it should improve the observation—zoom, change view, expose structure, process the image, or inspect Blender state—rather than confidently editing from an ambiguous overview.
+
+Reference and model should usually be inspected at comparable detail when fidelity matters.
+
+How this is implemented is open.
+
+## 7. Editability and authoring source
+
+Prefer retaining useful authoring structure when it gives future work leverage.
+
+That may mean curves, modifiers, Geometry Nodes, source parts, semantic anchors, ordinary editable meshes, procedural scripts, or some combination.
+
+Do not destroy useful source structure merely to make one output easier to produce. Derived/export artifacts may be destructive when the consumer requires it.
+
+## 8. Safety boundaries
+
+These are product boundaries, not architecture prescriptions:
+
+- do not casually overwrite user source assets;
+- do not grant research children unnecessary host authority;
+- do not assume MCP or arbitrary Python is a sandbox;
+- do not use credentials, network authority, or paid providers implicitly;
+- respect third-party licenses and provenance.
+
+## 9. What completion means
+
+Completion is not a particular directory tree or set of framework components.
+
+The repository succeeds when the resulting Skill is something Astra can actually use to produce strong Blender work, and when the implementation is understandable enough for a future Astra to continue improving it without reconstructing this conversation.
+
+Astra decides what experiments or checks are needed to reach that confidence.
