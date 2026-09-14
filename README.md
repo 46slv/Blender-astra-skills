@@ -33,6 +33,30 @@ Blender 5.2.1で制作、画像比較、GN変更、保存後の再読込まで�
 Libraryは約615 KBで、元の制作シーンや外部ファイルに依存しません。
 Skillのglobal登録やBlender設定の永続保存は行っていません。
 
+## 構造から探し、制作経験を残す
+
+Libraryの実体とは別に、9 Assetの意味情報と2 Methodを小さな知識カードとして
+持たせました。Skill本文は探し方・理解・再利用・学習の方法を担当し、増える情報は
+各Libraryの `knowledge/*.json` に保存します。今後のproject/private Libraryも
+明示したrootから検索でき、公開用のSkillへ個人資産を混ぜる必要はありません。
+
+```text
+python skills/blender/scripts/knowledge.py "支柱 横板 段数 間隔" --full
+```
+
+名前を知らなくても部品・関係・用途から候補を探し、知識カードの制約と根拠を読み、
+元ファイルの版を確認してappendできます。検索は軽量な語句照合で、意味の一致を
+保証するものではありません。使って分かった構造・失敗・有効な変更をカードへ戻し、
+共通原理が次の制作に役立つときにMethodや既存generatorの拡張へ育てます。
+[実際の使い方と学習手順](skills/blender/references/knowledge.md)を参照してください。
+
+![構造検索から既存棚を再利用した低い展示台と高いラック](artifacts/knowledge-reuse.png)
+
+この2点は同じ既存GNを別々にappendしたものです。新しいローカルLibraryへのAsset保存、
+知識の追記、再検索、保存後の再読込・独立編集まで実行しました。棚板の重なる条件も
+実測してMethodへ戻しています。再現は `experiments/learn_and_reuse.py` のbuildと
+`--reopen`、検索・更新の確認は `python experiments/check_knowledge.py`。
+
 ## 使う
 
 このリポジトリ内ではAGENTS.mdからSkillへ案内されます。ほかの作業で使う場合は

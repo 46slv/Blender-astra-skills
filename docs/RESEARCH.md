@@ -1,5 +1,78 @@
 # Decisions and evidence — 2026-09-14
 
+## Compounding asset and method knowledge
+
+The native-only discovery decision below was sufficient for names and Asset Browser
+use, but could not find parts/relations or retain cross-asset methods without
+opening Blender. This delivery adds **11 portable JSON cards** beside the existing
+library: 9 asset cards and 2 method cards. Skill prose owns the workflow; native
+Blender owns editable assets; cards own growing structural meaning and evidence.
+The bundled cards are seeds, not the global destination for all future production.
+Explicit project/private roots support growth without publishing local data.
+
+Luna researched native metadata, sidecars, SQLite FTS and embeddings, plus Blender
+structure inspection. Astra chose sidecars and standard-library lexical retrieval:
+no external dependency, service, generated index or synchronization job. Native-only
+metadata cannot naturally express method evidence; SQLite/vectors would currently
+cost more than their demonstrated benefit. Future indexes can be disposable caches
+over these editable cards. Search normalizes text, uses curated structural English/
+Japanese terms and Japanese bigrams, and exposes matching terms/coverage. It does
+not infer compatibility, translate arbitrary paraphrases or solve structural graphs.
+
+Each search result retains its exact root and card. A relative asset locator,
+native ID/version and SHA-256 distinguish meaning from source identity; changed
+bytes fail resolution before append. Hash invalidation is deliberately file-wide.
+Knowledge revisions change independently; updates preserve the caller's full card
+and reject an obsolete expected revision. This supports one writer per library,
+not concurrent database transactions. Public availability is not a new license;
+private roots and rights/evidence stay explicitly scoped.
+
+`assets.inspect` reads authored hierarchy, modifiers, GN inputs/topology, materials,
+mesh/UV counts and basic rig/key/driver metadata from staged IDs. All 9 native assets
+were inspected on Blender 5.2.1 LTS. A live failure caught legacy modifier ID-property
+access; typed 5.2 RNA input readback is used now. The report intentionally stops
+short of full dependency closure, weights, nested graphs or deformation intent.
+Deep analysis is pulled by a real reuse question; facts, trials and inferred
+principles remain distinct in cards. No external model/tutorial was acquired here.
+
+`experiments/learn_and_reuse.py` demonstrates the whole loop, with build and reopen
+runs in fresh factory processes. Evidence is `artifacts/evidence.json:knowledge_reuse`
+and `artifacts/knowledge-reuse.png` (visually inspected, source-path metadata removed
+without changing pixels):
+
+- English structural and unspaced Japanese queries retrieve shelf and method cards.
+- Two independent native shelf appends become a **1.4 × 0.5 × 0.65 m** low stand
+  (7 instances) and **0.85 × 0.34 × 1.9 m** tall rack (10), both floor aligned.
+- The stand is captured into a separate local library plus a card, the card is
+  revised with measured evidence, and its new Japanese alias finds it immediately.
+- A separate process reopens the saved scene, edits stand levels, then discovers,
+  appends and edits the captured asset while the other copies remain unchanged.
+- At Height=0.4 and Levels=12, measured board spacing is **0.022273 m**, below
+  **0.035 m** thickness: overlap is real. The method retains the derived equation
+  `(Height - 0.155)/(Levels - 1)` and the need for positive useful clearance.
+- Three shipped cards were deepened with these measured uses/limits. Native source
+  bytes were unchanged. Variants of one source demonstrate its parameter range,
+  not independent proof of a universal shelf/room grammar. The rigid-pivot method
+  remains a candidate transfer beyond this lamp; cable pose-following is absent.
+
+Host checks passed for bilingual/partial/no-match retrieval, scoped private cards,
+portable relocation, missing/changed assets, malformed/duplicate cards and stale
+revision writes. An independent read-only Skill forward-test found the shelf, GN
+and method from a Japanese production request and resolved both native locators.
+It exposed missing broad method aliases (added) and the need to explain search-only
+CLI versus Python writes and targeted text search for limits (documented). Long
+natural-language queries have low lexical coverage; focused structure terms work.
+The stock Skill validator still fails to start because
+PyYAML is absent; no dependency was installed for it. Source syntax and local Skill
+links are checked separately. Existing Blender windows and saved preferences remain
+untouched; the local trial scene can include factory resources and is not published.
+
+References that informed this choice: [SQLite FTS5](https://www.sqlite.org/fts5.html),
+[native asset metadata](https://docs.blender.org/api/5.2/bpy.types.AssetMetaData.html),
+[library load/write](https://docs.blender.org/api/5.2/bpy.types.BlendDataLibraries.html),
+[GN modifier inputs](https://docs.blender.org/api/5.2/bpy.types.NodesModifier.html),
+[evaluated instances](https://docs.blender.org/api/5.2/bpy.types.DepsgraphObjectInstance.html).
+
 ## Continuing production and native assets
 
 The Skill is deliberately not permanently complete. Subsequent production should
@@ -9,7 +82,7 @@ signal about the result; Astra remains responsible for technical diagnosis and
 live observation → decision → edit → observation. GOAL and Skill now say this
 explicitly; current taxonomy and architecture are revisable.
 
-Native Blender storage won over a separate manifest/database: the Asset Browser
+In the preceding native-library delivery, Blender storage won over a separate manifest/database: the Asset Browser
 already handles catalogs, tags, descriptions and previews, while bpy can discover
 marked IDs without importing the scene. The small `scripts/assets.py` helper adds
 discovery, independent append and registration for a dedicated process. Registration

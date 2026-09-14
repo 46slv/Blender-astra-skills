@@ -3,7 +3,10 @@
 The bundled library is `assets/library` under the Skill directory. In code, use
 `assets.LIBRARY` below to avoid path guessing.
 Native `.blend` files hold marked IDs, descriptions, tags, previews and dependencies;
-`blender_assets.cats.txt` holds Blender's catalogs. No separate asset database.
+`blender_assets.cats.txt` holds Blender's catalogs. Optional `knowledge/*.json`
+cards add structural meaning, methods and evidence outside the native datablocks;
+see [knowledge.md](knowledge.md) for host-side search and staged learning. They
+reference the native source rather than replacing Blender's asset storage.
 The starter library works in Blender 5.2.1; probe other versions before promising
 compatibility. Existing production scenes never have to run generator Python.
 
@@ -23,6 +26,11 @@ print(lamp.asset_data.description, lamp.asset_data.license)
 placement = next(o for o in lamp.objects if o.parent is None)
 placement.location.x = 2.0
 ```
+
+For parts/relations/use rather than names, search `knowledge.search(...)`, read
+the full candidate and pass `knowledge.resolve(candidate)` to `assets.append`.
+Use `assets.inspect(datablock)` on a staged candidate for native structural facts.
+Native discovery still finds assets that have not yet received a knowledge card.
 
 Pass an explicit project/private library directory to `find(root=...)` or
 `register(root=...)`. Registration uses Blender preferences, so this helper disables
@@ -121,6 +129,11 @@ to render an asset from permission to republish its source/texture. Unclear term
 leave outside the reusable published library and investigate the source. Known
 restrictions: keep in a suitably scoped private library with visible usage limits.
 No new service, purchase or bulk download is needed merely to exercise this policy.
+
+After capture, leave a light knowledge card with the exact source reference, rights,
+purpose and useful structural terms. On real reuse, update its understanding and
+evidence without changing the native asset version unless the asset itself changes.
+Method cards can link several assets or tutorials without duplicating their geometry.
 
 The extraction example is `experiments/build_asset_library.py` at repo root; it writes
 to a new `ASSET_OUTPUT` directory and keeps the original scene file intact. Adapt

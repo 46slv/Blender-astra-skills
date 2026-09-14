@@ -71,4 +71,10 @@ These are starting points. Astra owns the decision about what survives implement
 
 Preserve user assets and avoid destructive source overwrite by default. Respect credentials, paid/external services, repository authority, and third-party licenses. Do not silently copy external code without checking provenance and terms.
 
+The user authorizes email-privacy repairs without renewed confirmation: when
+GitHub rejects an agent-created, unpushed commit with GH007, amend that commit's
+author/committer email to the verified account's GitHub noreply address and retry
+the authorized push. Keep account privacy settings intact. This permission covers
+the agent's own unpublished commits, not other work or published history.
+
 Outside those boundaries, prefer informed autonomy over asking the user to make implementation decisions Astra can make better itself.

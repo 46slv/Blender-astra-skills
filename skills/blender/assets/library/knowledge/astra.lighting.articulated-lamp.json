@@ -1,0 +1,72 @@
+{
+  "id": "astra.lighting.articulated-lamp",
+  "kind": "asset",
+  "title": "Articulated Lamp v1",
+  "summary": "Meters, Z up, base at origin. Move Lamp placement; pose Shoulder/Elbow/Head Y pivots. Editable shade shell and cable, 6 instanced fasteners. Cable is static; refit after large poses.",
+  "terms": [
+    "lamp",
+    "ランプ",
+    "articulated",
+    "collection",
+    "enamel",
+    "joint hinge pivot articulated arm desk light shade",
+    "関節 可動アーム 卓上照明 支点 シェード"
+  ],
+  "source": {
+    "file": "starter-v1.blend",
+    "kind": "collections",
+    "name": "Articulated Lamp v1",
+    "sha256": "2e62d4e02c121c0cfeecfae838b504e74ceece0fee7411c46825d94048261ced",
+    "asset_id": "astra.lighting.articulated-lamp",
+    "asset_version": 1
+  },
+  "provenance": {
+    "source": "Project-authored starter library from lamp/shelf examples",
+    "source_url": "https://github.com/46slv/Blender-astra-skills/blob/915498d/experiments/build_asset_library.py",
+    "rights": "Project-authored; no standalone redistribution license specified.",
+    "publication": "Existing owner-authorized project PR; no third-party grant."
+  },
+  "evidence": [
+    {
+      "status": "observed",
+      "basis": "Blender 5.2.1 LTS assets.inspect on starter-v1.blend",
+      "claim": "Marked identity and native structure read in dedicated staging process."
+    }
+  ],
+  "structure": {
+    "parts": [
+      "weighted base",
+      "paired lower and upper rigid links",
+      "hinges",
+      "shade shell",
+      "rim",
+      "bulb",
+      "Bezier cable",
+      "radial fasteners"
+    ],
+    "relations": [
+      "base supports shoulder pivot; shoulder parents elbow; elbow parents head",
+      "head parents shade rim socket and bulb",
+      "cable belongs to placement frame, not articulated chain"
+    ]
+  },
+  "interfaces": {
+    "placement": "Lamp placement - move whole assembly: base origin, meters, Z up",
+    "pose": "Shoulder - rotate Y / Elbow - rotate Y / Head - rotate Y: local Y radians"
+  },
+  "uses": [
+    "desk light",
+    "rigid articulated assembly",
+    "shade profile and hinge source parts"
+  ],
+  "limits": [
+    "Cable is static; large poses need refitting.",
+    "Arm length and shade exchange are manual edits, not exposed parameters.",
+    "No certified joint travel or collision limits."
+  ],
+  "links": [
+    "method.rigid-pivot-chain",
+    "astra.generators.radial-fasteners"
+  ],
+  "revision": 1
+}

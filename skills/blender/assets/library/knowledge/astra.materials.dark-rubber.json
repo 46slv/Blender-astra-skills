@@ -1,0 +1,51 @@
+{
+  "id": "astra.materials.dark-rubber",
+  "kind": "asset",
+  "title": "Dark Rubber v1",
+  "summary": "Dark matte rubber/cable, roughness 0.65. Principled shader; no external textures.",
+  "terms": [
+    "material",
+    "principled",
+    "dark-rubber",
+    "shader surface",
+    "材質 シェーダー"
+  ],
+  "source": {
+    "file": "starter-v1.blend",
+    "kind": "materials",
+    "name": "Dark Rubber v1",
+    "sha256": "2e62d4e02c121c0cfeecfae838b504e74ceece0fee7411c46825d94048261ced",
+    "asset_id": "astra.materials.dark-rubber",
+    "asset_version": 1
+  },
+  "provenance": {
+    "source": "Project-authored starter library from lamp/shelf examples",
+    "source_url": "https://github.com/46slv/Blender-astra-skills/blob/915498d/experiments/build_asset_library.py",
+    "rights": "Project-authored; no standalone redistribution license specified.",
+    "publication": "Existing owner-authorized project PR; no third-party grant."
+  },
+  "evidence": [
+    {
+      "status": "observed",
+      "basis": "Blender 5.2.1 LTS assets.inspect on starter-v1.blend",
+      "claim": "Marked identity and native structure read in dedicated staging process."
+    }
+  ],
+  "structure": {
+    "parts": [
+      "Principled shader"
+    ],
+    "relations": [
+      "surface shader feeds material output"
+    ]
+  },
+  "uses": [
+    "assign to a material slot",
+    "reuse in new props"
+  ],
+  "limits": [
+    "Uniform shader; no external textures.",
+    "Inspect material users before editing shared surfaces."
+  ],
+  "revision": 1
+}

@@ -17,14 +17,25 @@ evaluated geometry BVHs and matched image crops. NumPy least squares operates on
 small set of author-selected controls. Native parents and GN retain editability.
 
 NodeCue's live node probe is reused under MIT. No SceneIR, mandatory segmentation
-stack, semantic database, global solver, new agent role, paid asset service or model
+stack, database service, global solver, new agent role, paid asset service or model
 download proved necessary for the completed trials.
 
 Reusable production work lives in ordinary native Blender asset libraries: marked
 collections/objects/materials/node groups, native metadata/previews and catalog
-UUIDs. A small bpy helper discovers and appends assets; there is no parallel asset
-database. Authored and acquired resources follow the same reuse approach, with
+UUIDs. A small bpy helper discovers, appends and inspects assets. Each library may
+hold portable JSON knowledge cards for structure, interfaces, methods and evidence;
+host Python searches selected roots without opening Blender. Exact source hashes
+detect stale references before append. Cards enrich native assets rather than
+duplicating their geometry or depending on a database service. Authored and acquired resources follow the same reuse approach, with
 provenance and rights controlling which library can contain/distribute them.
+
+The Skill describes discovery, interpretation and reuse. The library stores native
+assets; its separate knowledge cards store growing meaning and production lessons.
+The distributed Skill includes a small seed library/cards; project/private growth
+lives in explicitly selected external roots. Knowledge edits have their own revision,
+separate from native asset versions. Methods link demonstrated cases and limits;
+new generators earn their place through useful variation, not an automatic promotion
+threshold. Lexical ranking generates candidates, never proof of semantic fit.
 
 The Skill remains in continuing development. Production starts by considering
 existing assets and methods; demonstrated solutions and better authoring return

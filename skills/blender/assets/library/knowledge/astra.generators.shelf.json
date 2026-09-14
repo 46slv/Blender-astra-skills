@@ -1,0 +1,77 @@
+{
+  "id": "astra.generators.shelf",
+  "kind": "asset",
+  "title": "Shelf Generator v1",
+  "summary": "Geometry Nodes modifier generator, meters, Z up. Width/Depth/Height/Levels, 5-level defaults; object preset has independent modifier values. No Python required to evaluate.",
+  "terms": [
+    "shelf",
+    "棚",
+    "geometry-nodes",
+    "generator",
+    "vertical supports repeated horizontal members count spacing",
+    "支柱 横板 段数 間隔 可変 展示台 収納ラック"
+  ],
+  "source": {
+    "file": "starter-v1.blend",
+    "kind": "node_groups",
+    "name": "Shelf Generator v1",
+    "sha256": "2e62d4e02c121c0cfeecfae838b504e74ceece0fee7411c46825d94048261ced",
+    "asset_id": "astra.generators.shelf",
+    "asset_version": 1
+  },
+  "provenance": {
+    "source": "Project-authored starter library from lamp/shelf examples",
+    "source_url": "https://github.com/46slv/Blender-astra-skills/blob/915498d/experiments/build_asset_library.py",
+    "rights": "Project-authored; no standalone redistribution license specified.",
+    "publication": "Existing owner-authorized project PR; no third-party grant."
+  },
+  "evidence": [
+    {
+      "status": "observed",
+      "basis": "Blender 5.2.1 LTS assets.inspect on starter-v1.blend",
+      "claim": "Marked identity and native structure read in dedicated staging process."
+    },
+    {
+      "status": "tested",
+      "basis": "artifacts/evidence.json: knowledge_reuse (relative to repository)",
+      "claim": "Low display stand: 1.4 x 0.5 x 0.65 m, 3 boards + 4 posts; tall rack: 0.85 x 0.34 x 1.9 m, 6 boards + 4 posts. Independent copies; saved scene and captured stand reopen and remain editable."
+    },
+    {
+      "status": "tested",
+      "basis": "artifacts/evidence.json: knowledge_reuse.crowded_limit (relative to repository)",
+      "claim": "At Height=0.4, Levels=12: measured board-center spacing 0.022273 m is less than 0.035 m board thickness; overlap confirmed."
+    }
+  ],
+  "structure": {
+    "parts": [
+      "four vertical supports",
+      "repeated horizontal members boards"
+    ],
+    "relations": [
+      "supports at four inset corners",
+      "count determines evenly spaced levels",
+      "height sets post length and upper board center"
+    ]
+  },
+  "interfaces": {
+    "controls": "Width Depth Height in meters; Levels integer",
+    "anchor": "local origin at floor, Z up, X width, Y depth",
+    "representation": "unrealized GN board and post instances"
+  },
+  "uses": [
+    "shelving",
+    "low display stand",
+    "tall storage rack",
+    "count spacing variation"
+  ],
+  "limits": [
+    "Board thickness fixed 0.035 m; post section fixed 0.045 m.",
+    "No joinery, load rating, wood texture or automatic collision constraint.",
+    "Low height with high Levels overlaps boards; inspect spacing."
+  ],
+  "links": [
+    "method.supports-and-repeated-members",
+    "astra.furniture.parametric-shelf"
+  ],
+  "revision": 2
+}

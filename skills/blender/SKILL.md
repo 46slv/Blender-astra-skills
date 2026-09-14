@@ -1,6 +1,6 @@
 ---
 name: blender
-description: Create, refine and inspect editable Blender models and scenes using direct visual feedback, bpy, Geometry Nodes, references and reusable assets. Use for Blender modeling, reference matching, procedural authoring, scene assembly, asset-library work and repairs.
+description: Create, refine and inspect editable Blender models and scenes using direct visual feedback, bpy, Geometry Nodes, references and reusable assets. Use for Blender modeling, reference matching, procedural authoring, scene assembly, asset-library and model-knowledge work, and repairs.
 ---
 
 # Blender
@@ -23,6 +23,12 @@ whether reuse, adaptation or new authoring best serves this brief. Read
 [assets.md](references/assets.md) for the working native Asset Library, discovery,
 editable import and capture of authored or acquired resources. A poor existing
 asset is not a reason to compromise the result.
+
+For structural discovery and learning from past production, read
+[knowledge.md](references/knowledge.md). Search explicit library roots for asset
+and method cards by parts, relationships and use, then inspect the promising native
+source. Choose direct reuse, adaptation, parts, a generator or new authoring from
+the actual fit. Partial search matches do not prove requested capabilities.
 
 If no suitable persistent channel exists, [runtime.md](references/runtime.md) gives a local session that needs only Blender and host Python. It starts a separate factory session, runs scripts on Blender's main thread and returns results without a network listener or add-on. It does not attach to an arbitrary open file. Other Blender windows may contain unsaved work.
 
@@ -65,6 +71,14 @@ leaf/branch source parts, modular components or complete procedural systems. Kee
 the smallest useful editable unit with its dependencies and usage knowledge; a
 finished scene is not always the best asset. Use the same library approach for
 acquired resources once their provenance and allowed uses are understood.
+
+Store growing asset/model meaning and reuse evidence in library knowledge cards,
+not an expanding Skill encyclopedia. Start with light indexing; deepen the card
+when actual use reveals valuable structure, controls, failure modes or a better
+method. Separate observed data, tested behavior and inferred design intent. A
+static mesh cannot establish rig/deformation intent. When independent uses expose
+a useful common invariant, link them in a method and consider a generic part, kit
+or generator; preserve source quality and validate the claimed range of variation.
 
 When production exposes a limitation, investigate the cause, try a remedy and
 inspect the result. Generalize only what will improve another real task: a concise
