@@ -1,102 +1,74 @@
 # Blender Astra Skills
 
-Architecture-first repository for a Blender Agent Skill designed around **Astra as the solo/direct interactive Blender driver**.
+Research-and-build repository for a Blender Skill designed around one premise:
 
-The intended final Skill is currently named `blender-astra-modeling`.
+> Give Astra enough context, access, and research depth to discover a better way to work in Blender than we can fully prescribe in advance.
 
-## Current status
+## Status
 
-**ARCHITECTURE_ONLY / IMPLEMENTATION_PENDING / HOST_VALIDATION_PENDING**
+**RESEARCH / ARCHITECTURE SEED — IMPLEMENTATION PENDING**
 
-This repository currently defines the implementation contract. It does **not** yet claim that the Skill, Blender adapters, visual-analysis helpers, or host fixtures are implemented or qualified.
+The repository currently contains prior research and design ideas. They are not a fixed specification.
 
-## Core idea
+## Goal
 
-Keep the live Blender visual/spatial state in one Astra context:
+Build a practical, unusually capable Blender Skill for Astra.
 
-```text
-OBSERVE
-  -> reason about geometry / uncertainty
-  -> choose the shortest execution lane
-       GUI / Computer Use
-       bpy / bounded Blender adapter
-       Geometry Nodes / modifiers
-  -> ACT directly
-  -> re-observe at the required scale
-  -> local repair
-  -> structural + visual verification
-```
+Astra should understand the live capabilities available to it, research the problem space broadly, reuse strong prior art where useful, invent new mechanisms where useful, and finish something it can actually use in Blender.
 
-Subagents are research-only by default: Blender Manual/API lookup, tutorial mining, version checks, export/consumer specs, and prior-art research. They do not own interactive Blender mutation or final visual acceptance.
+See [`GOAL.md`](GOAL.md).
 
-## Read order
+## Working hypothesis
 
-1. [`AGENTS.md`](AGENTS.md) — durable repository rules and routing.
-2. [`GOAL.md`](GOAL.md) — current implementation outcome and acceptance.
-3. [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — system architecture and Skill boundary.
-4. [`docs/VISUAL_ANALYSIS.md`](docs/VISUAL_ANALYSIS.md) — paired reference/model inspection, segmentation, boundaries, occlusion, detail verification.
-5. [`docs/PROCEDURAL_AUTHORING.md`](docs/PROCEDURAL_AUTHORING.md) — Geometry Nodes procedural-leverage contract.
-6. [`docs/PRIOR_ART.md`](docs/PRIOR_ART.md) — existing Blender Agent Skills to inspect and reuse before rebuilding.
-7. [`docs/EVALS.md`](docs/EVALS.md) — representative fixtures and promotion gates.
-
-## Intended Skill shape
+Interactive Blender work probably benefits from keeping visual/spatial continuity inside one Astra context:
 
 ```text
-blender-astra-modeling/
-  SKILL.md
-  references/
-    observation-protocol.md
-    visual-structural-analysis.md
-    method-routing.md
-    geometry-nodes-routing.md
-    repair-policy.md
-    consumer-checks.md
-  scripts/
-    scene_report.py
-    capture_fixed_views.py
-    frame_target.py
-    capture_region.py
-    make_edge_map.py
-    extract_silhouette.py
-    align_comparison_pair.py
-    compose_comparison_packet.py
-    blender_diagnostic_passes.py
-    compare_region_masks.py
-    validate_evidence_packet.py
-  schemas/
-    observation_plan.schema.json
-    visual_receipt.schema.json
-    semantic_region_map.schema.json
-    occlusion_graph.schema.json
-    comparison_packet.schema.json
-    repair_ticket.schema.json
+Astra sees
+→ Astra reasons
+→ Astra acts
+→ Astra looks again
+→ Astra adapts
 ```
 
-The structure above is a target, not a requirement to implement every file immediately. Reuse upstream components where they are better and compatible.
+Research is different. Research can fan out aggressively to Luna/subagents because it does not require ownership of the live Blender state.
 
-## Design priorities
+Astra should generate multiple plausible approaches for meaningful unknowns, delegate independent investigations, and synthesize the results itself.
 
-- Astra solo/direct host operation for interactive Blender work.
-- Active perception rather than one-shot screenshot judgement.
-- Paired reference/model close-ups at comparable view, framing, orientation, and scale.
-- Perception-before-judgement: silhouette, edge, semantic region, boundary class, occlusion, landmark, Depth/Normal/object-mask evidence when useful.
-- `UNKNOWN` remains `UNKNOWN`; invisible or ambiguous detail is not a PASS.
-- Geometry Nodes used for procedural leverage, not for maximizing node usage.
-- Preserve manual high-quality source parts and wrap/assemble them procedurally when appropriate.
-- Derive contact/alignment/dependent transforms rather than exposing unnecessary raw XYZ controls.
-- Preserve editable authoring source; destructive/export realization belongs in derived outputs.
-- Reuse prior art before reimplementing analyzers, reference-fit loops, or GN knowledge.
-- Promotion to active Skill requires representative host fixtures, not documentation completeness.
+## The docs are ideas, not obligations
 
-## Prior art
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — current design space and hypotheses.
+- [`docs/VISUAL_ANALYSIS.md`](docs/VISUAL_ANALYSIS.md) — ways to augment fine visual perception and reference/model comparison.
+- [`docs/PROCEDURAL_AUTHORING.md`](docs/PROCEDURAL_AUTHORING.md) — Geometry Nodes / procedural-authoring opportunities.
+- [`docs/PRIOR_ART.md`](docs/PRIOR_ART.md) — existing Blender Agent work worth inspecting and extending.
 
-The current architecture intentionally builds on ideas from public projects including:
+Astra may simplify, replace, or discard these ideas after research or implementation.
+
+## Important directions discovered so far
+
+- Keep live Blender manipulation with Astra by default rather than fragmenting visual context across host-operating agents.
+- Use Luna/subagents heavily for research, including competing approaches and adjacent fields.
+- Improve perception before editing when a detail is ambiguous: zoom, compare reference/model at the same region, expose structure, or use image/Blender-derived evidence when useful.
+- Treat semantic regions, overlap/occlusion, landmarks, masks, Depth/Normal and similar signals as possible aids—not a mandatory visual pipeline.
+- Use Geometry Nodes where procedural relationships create real leverage: reusable parts, parametric assets, modular assembly, contact/alignment, repeated layouts and environments.
+- Do not force Geometry Nodes when ordinary modeling or another mechanism is better.
+- Reuse strong existing Skills and code instead of rebuilding solved components.
+- Avoid infrastructure that exists only to make the repository look rigorous.
+
+## Prior art seed
+
+Current high-value sources include:
 
 - `ifBars/blender-agent-studio`
 - `RobLe3/cc-blender-skill`
 - `CheshireJCat/create-3d-model-skill`
 - `nodecue/blender-node-skills`
-- `Aztech-Lab/EZ_Blender` as an orchestrated comparison baseline
-- `achimala/dream-loop` as visual closed-loop prior art
+- `Aztech-Lab/EZ_Blender`
+- `achimala/dream-loop`
 
-See [`docs/PRIOR_ART.md`](docs/PRIOR_ART.md) before copying or reimplementing anything. Inspect current upstream code and licenses first.
+This list is deliberately incomplete. Astra should search beyond it and beyond Blender-specific agent projects.
+
+## For Astra
+
+Start with `AGENTS.md` and `GOAL.md`.
+
+Then inspect the current repo, the live runtime, and whatever research is useful. Do not implement the current documents mechanically. Make the best Skill you can discover, and keep the repository only as complicated as the resulting capability actually requires.
